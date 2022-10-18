@@ -15,5 +15,7 @@ namespace Repository
         : base(repositoryContext)
         {
         }
+        public IEnumerable<Employee> GetAllEmployee(bool trackChanges) =>
+          FindAll(trackChanges).OrderBy(c => c.Name).ToList();
     }
 }

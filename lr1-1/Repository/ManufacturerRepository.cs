@@ -14,7 +14,10 @@ namespace Repository
 
         public ManufacturerRepository(RepositoryContext repositoryContext)
         : base(repositoryContext)
-        { }
+        { 
+        }
+        public IEnumerable<Manufacturer> GetAllManufacturer(bool trackChanges) =>
+          FindAll(trackChanges).OrderBy(c => c.NameManufacturer).ToList();
     }
 }
 

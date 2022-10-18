@@ -15,5 +15,7 @@ namespace Repository
     : base(repositoryContext)
         {
         }
+        public IEnumerable<Storage> GetAllStorage(bool trackChanges) =>
+          FindAll(trackChanges).OrderBy(c => c.BuyerID).ToList();
     }
 }

@@ -1,6 +1,9 @@
-﻿using lr1_1.Extensions;
+﻿using Contracts;
+using lr1_1.Extensions;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using NLog;
 
 public class Startup
@@ -16,6 +19,7 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddAutoMapper(typeof(Startup));
         services.ConfigureCors();
         services.ConfigureIISIntegration();
         services.ConfigureLoggerService();
@@ -27,7 +31,7 @@ public class Startup
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerManager logger)
     {
         if (env.IsDevelopment())
         {
@@ -35,7 +39,7 @@ public class Startup
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-
+        app.ConfigureExceptionHandler(logger);
         app.UseHttpsRedirection();
         app.UseHsts();
         app.UseStaticFiles();
@@ -46,9 +50,7 @@ public class Startup
         });
         app.UseRouting();
         app.UseAuthorization();
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers();
-        });
+        app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+
     }
 }
