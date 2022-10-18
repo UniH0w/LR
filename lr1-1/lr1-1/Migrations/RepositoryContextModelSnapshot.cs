@@ -22,6 +22,46 @@ namespace lr1_1.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("Entities.Models.Buyer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("BuyerId");
+
+                    b.Property<string>("Family")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MiddleName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Buyers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("ffdc95a1-cc97-4f72-94b3-33b98aa69e23"),
+                            Family = "Kosov",
+                            MiddleName = "Alexandrovich",
+                            Name = "Sergey"
+                        },
+                        new
+                        {
+                            Id = new Guid("280ddbaf-77ba-452f-8674-524d838e359a"),
+                            Family = "Salticov",
+                            MiddleName = "Alexandrovich",
+                            Name = "Ivan"
+                        });
+                });
+
             modelBuilder.Entity("Entities.Models.Company", b =>
                 {
                     b.Property<Guid>("Id")
@@ -117,6 +157,138 @@ namespace lr1_1.Migrations
                             CompanyId = new Guid("3d490a70-94ce-4d15-9494-5248280c2ce3"),
                             Name = "Kane Miller",
                             Position = "Administrator"
+                        });
+                });
+
+            modelBuilder.Entity("Entities.Models.Manufacturer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("ManufacturerId");
+
+                    b.Property<string>("NameManufacturer")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Manufacturers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("5e37de8c-6df8-43f0-9cf9-c6963a479fc5"),
+                            NameManufacturer = "Apple"
+                        },
+                        new
+                        {
+                            Id = new Guid("61b5cc85-d737-4ab9-80f1-dc173809797a"),
+                            NameManufacturer = "Samsung"
+                        });
+                });
+
+            modelBuilder.Entity("Entities.Models.Order", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("OrderId");
+
+                    b.Property<Guid>("IdBuyer1")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("IdProduct1")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Orders");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("815eaeb2-2a27-45f0-b9b8-235bbe1fd08c"),
+                            IdBuyer1 = new Guid("ffdc95a1-cc97-4f72-94b3-33b98aa69e23"),
+                            IdProduct1 = new Guid("be68df46-fd31-4b46-80f2-2ad3fa621e82")
+                        },
+                        new
+                        {
+                            Id = new Guid("43a0b53b-8eff-45a7-a0cd-724eaa2eefc3"),
+                            IdBuyer1 = new Guid("280ddbaf-77ba-452f-8674-524d838e359a"),
+                            IdProduct1 = new Guid("319d5467-6dec-4cad-8dc8-602ff6fe431a")
+                        });
+                });
+
+            modelBuilder.Entity("Entities.Models.Product", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("ProductId");
+
+                    b.Property<Guid>("ManufacturerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("NameModels")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("be68df46-fd31-4b46-80f2-2ad3fa621e82"),
+                            ManufacturerId = new Guid("5e37de8c-6df8-43f0-9cf9-c6963a479fc5"),
+                            NameModels = "Iphone x",
+                            Price = 20000
+                        },
+                        new
+                        {
+                            Id = new Guid("319d5467-6dec-4cad-8dc8-602ff6fe431a"),
+                            ManufacturerId = new Guid("61b5cc85-d737-4ab9-80f1-dc173809797a"),
+                            NameModels = "S22",
+                            Price = 15000
+                        });
+                });
+
+            modelBuilder.Entity("Entities.Models.Storage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("StrorageId");
+
+                    b.Property<Guid>("BuyerID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Storages");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("93362477-fbdf-4909-8a17-707e6617f306"),
+                            BuyerID = new Guid("ffdc95a1-cc97-4f72-94b3-33b98aa69e23"),
+                            Quantity = 20
+                        },
+                        new
+                        {
+                            Id = new Guid("26b89402-b58f-4e0f-9095-85abea9c6a08"),
+                            BuyerID = new Guid("280ddbaf-77ba-452f-8674-524d838e359a"),
+                            Quantity = 45
                         });
                 });
 

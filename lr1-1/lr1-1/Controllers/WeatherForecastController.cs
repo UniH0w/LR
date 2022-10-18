@@ -16,7 +16,6 @@ namespace lr1_1.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            //
             /*_repository.Company.AnyMethodFromCompanyRepository();
             _repository.Employee.AnyMethodFromEmployeeRepository();*/
             return new string[] { "value1", "value2" };
