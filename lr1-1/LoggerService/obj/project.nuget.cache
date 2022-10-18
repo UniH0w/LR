@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "PfIZKZrQPmj+0yzrIkhRmggFWidGDaA4PYHOP7CClEvE7dSFQLRAcYmv8KhywPCG0/faG4sCUkWvzodzFyjQrA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Uniho\\Desktop\\LR\\lr1-1\\LoggerService\\LoggerService.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Uniho\\.nuget\\packages\\nlog\\5.0.4\\nlog.5.0.4.nupkg.sha512"
+  ],
+  "logs": []
+}
