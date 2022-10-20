@@ -10,5 +10,6 @@ namespace Contracts
     public interface IManufacturerRepository
     {
         IEnumerable<Manufacturer> GetAllManufacturer(bool trackChanges);
+        Manufacturer GetManufacturer(Guid manufacturerId, bool trackChanges);
     }
 }

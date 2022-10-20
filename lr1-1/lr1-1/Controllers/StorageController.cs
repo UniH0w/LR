@@ -26,9 +26,28 @@ namespace lr1_1.Controllers
         public IActionResult GetStorage()
         {
             var storage = _repository.Storage.GetAllStorage(trackChanges: false);
-            var storageDto = _mapper.Map<IEnumerable<StorageDto>>(storage);
+            var storageDto = storage.Select(c => new StorageDto 
+            {
+                Id = c.Id,
+                BuyerId = c.BuyerID,
+                Quantity = c.Quantity,
+            }).ToList();
             return Ok(storageDto);
-
+        }
+        [HttpGet("{id}")]
+        public IActionResult GetStorage(Guid id)
+        {
+            var storage = _repository.Storage.GetStorage(id, trackChanges: false);
+            if (storage == null)
+            {
+                _logger.LogInfo($"Storage with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+            else
+            {
+                var storageDto = _mapper.Map<StorageDto>(storage);
+                return Ok(storageDto);
+            }
         }
     }
 }

@@ -10,5 +10,7 @@ namespace Contracts
     public interface IBuyerRepository
     {
         IEnumerable<Buyer> GetAllBuyer(bool trackChanges);
+        Buyer GetBuyer(Guid buyerId, bool trackChanges);
+
     }
 }

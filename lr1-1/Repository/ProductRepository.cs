@@ -17,5 +17,8 @@ namespace Repository
         }
         public IEnumerable<Product>GetAllProducts(bool trackChanges) =>
            FindAll(trackChanges).OrderBy(c => c.NameModels).ToList();
+
+        public Product GetProducts(Guid productId, bool trackChanges) => FindByCondition(c => c.Id.Equals(productId), trackChanges).SingleOrDefault();
     }
 }
+

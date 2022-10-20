@@ -10,5 +10,6 @@ namespace Contracts
     public interface IStorageRepository
     {
         IEnumerable<Storage> GetAllStorage(bool trackChanges);
+        Storage GetStorage(Guid storageId, bool trackChanges);
     }
 }

@@ -10,7 +10,6 @@ namespace Entities.DataTransferObjects
     {
         public Guid Id { get; set; }
         public Guid IdBuyer1 { get; set; }
-        public Guid IdProduct { get; set; }
-        
+        public Guid IdProduct1 { get; set; }
     }
 }

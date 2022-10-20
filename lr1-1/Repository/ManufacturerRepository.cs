@@ -18,6 +18,7 @@ namespace Repository
         }
         public IEnumerable<Manufacturer> GetAllManufacturer(bool trackChanges) =>
           FindAll(trackChanges).OrderBy(c => c.NameManufacturer).ToList();
+        public Manufacturer GetManufacturer(Guid manufacturerId, bool trackChanges) => FindByCondition(c => c.Id.Equals(manufacturerId), trackChanges).SingleOrDefault();
     }
 }
 

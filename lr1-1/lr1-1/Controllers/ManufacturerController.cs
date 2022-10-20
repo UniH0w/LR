@@ -27,9 +27,27 @@ namespace lr1_1.Controllers
         {
 
             var manufacturer = _repository.Manufacturer.GetAllManufacturer(trackChanges: false);
-            var manufacturerDto = _mapper.Map<IEnumerable<ManufacturerDto>>(manufacturer);
+            var manufacturerDto = manufacturer.Select(c => new ManufacturerDto
+            {
+                Id = c.Id,
+                NameManufacturer = c.NameManufacturer,
+            }).ToList();
             return Ok(manufacturerDto);
-
+        }
+        [HttpGet("{id}")]
+        public IActionResult GetManufacturer(Guid id)
+        {
+            var manufacturer = _repository.Manufacturer.GetManufacturer(id, trackChanges: false);
+            if (manufacturer == null)
+            {
+                _logger.LogInfo($"Manufacturer with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+            else
+            {
+                var manufacturerDto = _mapper.Map<ManufacturerDto>(manufacturer);
+                return Ok(manufacturerDto);
+            }
         }
     }
 }

@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using Contracts;
+
 using Entities.DataTransferObjects;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace lr1_1.Controllers
 {
-    [Route("api/employee")]
+    [Route("api/companies/{companyId}/employee")]
     [ApiController]
     public class EmployeeController : ControllerBase
     {
@@ -22,14 +23,38 @@ namespace lr1_1.Controllers
 
 
         }
-        [HttpGet]
-        public IActionResult GetEmployee()
+        //[HttpGet]
+        //public IActionResult GetEmployeesForCompany(Guid companyId)
+        //{
+        //    var company = _repository.Company.GetCompany(companyId, trackChanges: false);
+        //    if (company == null)
+        //    {
+        //        _logger.LogInfo($"Company with id: {companyId} doesn't exist in the database.");
+        //        return NotFound();
+        //    }
+        //    var employeesFromDb = _repository.Employee.GetAllEmployee(companyId, trackChanges: false);
+        //    var employeeDto = _mapper.Map<IEnumerable<EmployeeDto>>(employeesFromDb);
+        //    return Ok(employeesFromDb);
+        //}
+        [HttpGet("{id}")]
+        public IActionResult GetEmployeeForCompany(Guid companyId, Guid id)
         {
-
-            var employee = _repository.Employee.GetAllEmployee(trackChanges: false);
-            var employeeDto = _mapper.Map<IEnumerable<EmployeeDto>>(employee);
-            return Ok(employeeDto);
-
+            var company = _repository.Company.GetCompany(companyId, trackChanges: false);
+            if (company == null)
+            {
+                _logger.LogInfo($"Company with id: {companyId} doesn't exist in the database.");
+                return NotFound();
+            }
+            var employeeDb = _repository.Employee.GetEmployee(companyId, id,
+           trackChanges:
+            false);
+            if (employeeDb == null)
+            {
+                _logger.LogInfo($"Employee with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+            var employee = _mapper.Map<EmployeeDto>(employeeDb);
+            return Ok(employee);
         }
     }
 }

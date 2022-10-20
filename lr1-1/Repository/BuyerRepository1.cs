@@ -18,6 +18,8 @@ namespace Repository
         }
         public IEnumerable<Buyer> GetAllBuyer(bool trackChanges) =>
           FindAll(trackChanges).OrderBy(c => c.Name).ToList();
+
+        public Buyer GetBuyer(Guid buyerId, bool trackChanges) => FindByCondition(c => c.Id.Equals(buyerId), trackChanges).SingleOrDefault();
     }
 }
 

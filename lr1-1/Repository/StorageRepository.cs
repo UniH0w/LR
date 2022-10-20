@@ -17,5 +17,7 @@ namespace Repository
         }
         public IEnumerable<Storage> GetAllStorage(bool trackChanges) =>
           FindAll(trackChanges).OrderBy(c => c.BuyerID).ToList();
+
+        public Storage GetStorage(Guid storageId, bool trackChanges) => FindByCondition(c => c.Id.Equals(storageId), trackChanges).SingleOrDefault();
     }
 }

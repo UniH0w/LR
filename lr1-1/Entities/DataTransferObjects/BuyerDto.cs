@@ -9,6 +9,8 @@ namespace Entities.DataTransferObjects
     public class BuyerDto
     {
         public Guid Id { get; set; }
-        public string FullName { get; set; }
+        public string Family { get; set; }
+        public string Name { get; set; }
+        public string MiddleName { get; set; }
     }
 }

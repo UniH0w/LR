@@ -27,9 +27,28 @@ namespace lr1_1.Controllers
         {
 
             var order = _repository.Order.GetAllOrder(trackChanges: false);
-            var orderDto = _mapper.Map<IEnumerable<OrderDto>>(order);
+            var orderDto = order.Select(c => new OrderDto 
+            { 
+              Id = c.Id,
+              IdProduct1 = c.IdProduct1,
+              IdBuyer1 = c.IdBuyer1,
+            }).ToList();
             return Ok(orderDto);
-
+        }
+        [HttpGet("{id}")]
+        public IActionResult GetOrder(Guid id)
+        {
+            var order = _repository.Order.GetOrder(id, trackChanges: false);
+            if (order == null)
+            {
+                _logger.LogInfo($"Order with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+            else
+            {
+                var orderDto = _mapper.Map<OrderDto>(order);
+                return Ok(orderDto);
+            }
         }
     }
 }
