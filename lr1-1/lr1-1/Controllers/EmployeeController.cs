@@ -23,19 +23,19 @@ namespace lr1_1.Controllers
 
 
         }
-        //[HttpGet]
-        //public IActionResult GetEmployeesForCompany(Guid companyId)
-        //{
-        //    var company = _repository.Company.GetCompany(companyId, trackChanges: false);
-        //    if (company == null)
-        //    {
-        //        _logger.LogInfo($"Company with id: {companyId} doesn't exist in the database.");
-        //        return NotFound();
-        //    }
-        //    var employeesFromDb = _repository.Employee.GetAllEmployee(companyId, trackChanges: false);
-        //    var employeeDto = _mapper.Map<IEnumerable<EmployeeDto>>(employeesFromDb);
-        //    return Ok(employeesFromDb);
-        //}
+        [HttpGet]
+        public IActionResult GetEmployeesForCompany(Guid companyId)
+        {
+            var company = _repository.Company.GetCompany(companyId, trackChanges: false);
+            if (company == null)
+            {
+                _logger.LogInfo($"Company with id: {companyId} doesn't exist in the database.");
+                return NotFound();
+            }
+            var employeesFromDb = _repository.Employee.GetAllEmployee(companyId, trackChanges: false);
+            var employeeDto = _mapper.Map<IEnumerable<EmployeeDto>>(employeesFromDb);
+            return Ok(employeesFromDb);
+        }
         [HttpGet("{id}")]
         public IActionResult GetEmployeeForCompany(Guid companyId, Guid id)
         {
