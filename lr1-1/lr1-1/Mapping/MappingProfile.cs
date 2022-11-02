@@ -17,6 +17,13 @@ namespace lr1_1.Mapping
             CreateMap<Manufacturer, ManufacturerDto>();
             CreateMap<Product, ProductDto>();
             CreateMap<Storage, StorageDto>();
+            CreateMap<CompanyForCreationDto, Company>();
+            CreateMap<EmployeeForCreationDto, Employee>();
+            CreateMap<BuyerForCreationDto, Buyer>();
+            CreateMap<ManufacturerForCreationDto, Manufacturer>();
+            CreateMap<OrderForCreationDto, Order>();
+            CreateMap <ProductForCreationDto,Product>();
+            CreateMap<StorageForCreationDto, Storage>();
         }
     }
 }

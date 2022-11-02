@@ -11,6 +11,7 @@ namespace Contracts
     {
         IEnumerable<Buyer> GetAllBuyer(bool trackChanges);
         Buyer GetBuyer(Guid buyerId, bool trackChanges);
+        void CreateBuyer(Buyer buyer);
 
     }
 }

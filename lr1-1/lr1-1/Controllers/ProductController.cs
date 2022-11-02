@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using Contracts;
 using Entities.DataTransferObjects;
+using Entities.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace lr1_1.Controllers
 {
-    [Route("api/products")]
+    [Route("api/manufacturer/{ManufacturerId}/products")]
     [ApiController]
     public class ProductController : ControllerBase
     {
@@ -23,32 +24,66 @@ namespace lr1_1.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetProducts()
+        public IActionResult GetProductsForManufacturer(Guid ManufacturerID)
         {
-            var products = _repository.Product.GetAllProducts(trackChanges: false);
-            var productDto = products.Select(c => new ProductDto 
+            var manufacturer = _repository.Manufacturer.GetManufacturer(ManufacturerID, trackChanges: false);
+            if (manufacturer == null)
             {
-                Id = c.Id,
-                ManufacturerId = c.ManufacturerId,
-                NameModels = c.NameModels,
-                Price = c.Price,
-            }).ToList();
-            return Ok(productDto);
+                _logger.LogInfo($"Manufacturer with id: {ManufacturerID} doesn't exist in the database.");
+                return NotFound();
+            }
+
+            var productsFromDb = _repository.Product.GetAllProducts(ManufacturerID, trackChanges: false);
+            var productsDto = _mapper.Map<IEnumerable<ProductDto>>(productsFromDb);
+           return Ok(productsFromDb);
         }
-        [HttpGet("{id}")]
-        public IActionResult GetProduct(Guid id)
+        [HttpGet("{id}", Name = "GetProductForManufacturer")]
+        public IActionResult GetProductForManufacturer(Guid ManufacturerId, Guid id)
         {
-            var product = _repository.Product.GetProducts(id, trackChanges: false);
-            if (product == null)
+            var manufacturer = _repository.Manufacturer.GetManufacturer(ManufacturerId, trackChanges: false);
+            if (manufacturer == null)
+            {
+                _logger.LogInfo($"Manufacturer with id: {ManufacturerId} doesn't exist in the database.");
+                return NotFound();
+            }
+            var productDb = _repository.Product.GetProducts(ManufacturerId, id,
+           trackChanges:
+            false);
+            if (productDb == null)
             {
                 _logger.LogInfo($"Product with id: {id} doesn't exist in the database.");
                 return NotFound();
             }
-            else
-            {
-                var productDto = _mapper.Map<ProductDto>(product);
-                return Ok(productDto);
-            }
+            var product = _mapper.Map<ProductDto>(productDb);
+            return Ok(product);
         }
+        [HttpPost]
+        public IActionResult CreateProductForManufacturer(Guid ManufacturerId, [FromBody] ProductForCreationDto product)
+        {
+            if (product == null)
+            {
+                _logger.LogError("ProductForCreationDto object sent from client is null.");
+                return BadRequest("ProductForCreationDto object is null");
+            }
+            var manufacturer = _repository.Manufacturer.GetManufacturer(ManufacturerId, trackChanges: false);
+            if (manufacturer == null)
+            {
+                _logger.LogInfo($"Manufacturer with id: {ManufacturerId} doesn't exist in the database.");
+                return NotFound();
+            }
+            var productEntity = _mapper.Map<Product>(product);
+            _repository.Product.CreateProduct(ManufacturerId, productEntity);
+            _repository.Save();
+            var productToReturn = _mapper.Map<ProductDto>(productEntity);
+            return CreatedAtRoute("GetProductForManufacturer", new
+            {
+                ManufacturerId,
+                id = productToReturn.Id
+            }, productToReturn);
+        }
+
     }
 }
+    
+
+

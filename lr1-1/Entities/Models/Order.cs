@@ -16,5 +16,6 @@ namespace Entities.Models
         
         public Guid IdProduct1 { get; set; }
         public Guid IdBuyer1 { get; set; }
+        public string PurchaseName { get; set; }
     }
 }

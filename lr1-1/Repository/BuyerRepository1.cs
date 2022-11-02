@@ -20,6 +20,10 @@ namespace Repository
           FindAll(trackChanges).OrderBy(c => c.Name).ToList();
 
         public Buyer GetBuyer(Guid buyerId, bool trackChanges) => FindByCondition(c => c.Id.Equals(buyerId), trackChanges).SingleOrDefault();
+        public void CreateBuyer (Buyer buyer)
+        {
+            Create(buyer);
+        }
     }
 }
 

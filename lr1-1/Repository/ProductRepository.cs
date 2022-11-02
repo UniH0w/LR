@@ -15,10 +15,16 @@ namespace Repository
     : base(repositoryContext)
         {
         }
-        public IEnumerable<Product>GetAllProducts(bool trackChanges) =>
+        public IEnumerable<Product>GetAllProducts(Guid BuyerID, bool trackChanges) =>
            FindAll(trackChanges).OrderBy(c => c.NameModels).ToList();
 
-        public Product GetProducts(Guid productId, bool trackChanges) => FindByCondition(c => c.Id.Equals(productId), trackChanges).SingleOrDefault();
+        public Product GetProducts(Guid manufacturerId, Guid Id, bool trackChanges) => FindByCondition(c =>c.ManufacturerId.Equals(manufacturerId) && c.Id.Equals(Id), trackChanges).SingleOrDefault();
+        public void CreateProduct(Guid ManufacturerId, Product product)
+
+        {
+            product.ManufacturerId = ManufacturerId;
+            Create(product);
+        }
     }
 }
 

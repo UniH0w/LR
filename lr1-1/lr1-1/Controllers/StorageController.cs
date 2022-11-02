@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using Contracts;
 using Entities.DataTransferObjects;
+using Entities.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace lr1_1.Controllers
 {
-    [Route("api/storage")]
+    [Route("api/buyer/{BuyerId}/storage")]
     [ApiController]
     public class StorageController : ControllerBase
     {
@@ -23,31 +24,60 @@ namespace lr1_1.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetStorage()
+        public IActionResult GetStorage(Guid BuyerId)
         {
-            var storage = _repository.Storage.GetAllStorage(trackChanges: false);
-            var storageDto = storage.Select(c => new StorageDto 
-            {
-                Id = c.Id,
-                BuyerId = c.BuyerID,
-                Quantity = c.Quantity,
-            }).ToList();
-            return Ok(storageDto);
-        }
-        [HttpGet("{id}")]
-        public IActionResult GetStorage(Guid id)
-        {
-            var storage = _repository.Storage.GetStorage(id, trackChanges: false);
+            var storage = _repository.Storage.GetAllStorage(BuyerId, trackChanges: false);
             if (storage == null)
             {
-                _logger.LogInfo($"Storage with id: {id} doesn't exist in the database.");
+                _logger.LogInfo($"Buyer with id: {BuyerId} doesn't exist in the database.");
                 return NotFound();
             }
-            else
+
+            var storageFromDb = _repository.Storage.GetAllStorage(BuyerId, trackChanges: false);
+            var storageDto = _mapper.Map<IEnumerable<StorageDto>>(storageFromDb);
+            return Ok(storageFromDb);
+        }
+        [HttpGet("{id}", Name ="GetStorageForBuyer")]
+        public IActionResult GetStorage(Guid BuyerId, Guid Id)
+        {
+            var buyer = _repository.Storage.GetAllStorage(BuyerId, trackChanges: false);
+            if (buyer == null)
             {
-                var storageDto = _mapper.Map<StorageDto>(storage);
-                return Ok(storageDto);
+                _logger.LogInfo($"Storage with id: {BuyerId} doesn't exist in the database.");
+                return NotFound();
             }
+            var storageDb = _repository.Storage.GetStorage(BuyerId, Id, trackChanges: false);
+            if (storageDb == null)
+            {
+                _logger.LogInfo($"Storage with id: {Id} doesn't exist in the database.");
+                return NotFound();
+            }
+            var storage = _mapper.Map<StorageDto>(storageDb);
+            return Ok(storage);
+        }
+        [HttpPost]
+        public IActionResult CreateProductForBuyer(Guid BuyerId, [FromBody] StorageForCreationDto storage)
+        {
+            if (storage == null)
+            {
+                _logger.LogError("StorageForCreationDto object sent from client is null.");
+                return BadRequest("StorageForCreationDto object is null");
+            }
+            var Buyer = _repository.Storage.GetAllStorage(BuyerId, trackChanges: false);
+            if (Buyer == null)
+            {
+                _logger.LogInfo($"Buyer with id: {BuyerId} doesn't exist in the database.");
+                return NotFound();
+            }
+            var storageEntity = _mapper.Map<Storage>(storage);
+            _repository.Storage.CreateStorage(BuyerId, storageEntity);
+            _repository.Save();
+            var storageToReturn = _mapper.Map<StorageDto>(storageEntity);
+            return CreatedAtRoute("GetStorageForBuyer", new
+            {
+                BuyerId,
+                id = storageToReturn.Id
+            }, storageToReturn);
         }
     }
 }

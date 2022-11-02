@@ -37,7 +37,7 @@ namespace lr1_1.Controllers
             return Ok(buyerDto);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "BuyerById")]
         public IActionResult GetBuyer(Guid id)
         {
             var buyer = _repository.Buyer.GetBuyer(id, trackChanges: false);
@@ -51,6 +51,20 @@ namespace lr1_1.Controllers
                 var buyerDto = _mapper.Map<BuyerDto>(buyer);
                 return Ok(buyerDto);
             }
+        }
+        [HttpPost]
+        public IActionResult CreateBuyer([FromBody] BuyerForCreationDto buyer)
+        {
+            if (buyer == null)
+            {
+                _logger.LogError("BuyerForCreationDto object sent from client is null.");
+                return BadRequest("BuyerForCreationDto object is null");
+            }
+            var buyerEntity = _mapper.Map<Buyer>(buyer);
+            _repository.Buyer.CreateBuyer(buyerEntity);
+            _repository.Save();
+            var buyerToReturn = _mapper.Map<BuyerDto>(buyerEntity);
+            return CreatedAtRoute("BuyerById", new { id = buyerToReturn.Id },buyerToReturn);
         }
     }
 }

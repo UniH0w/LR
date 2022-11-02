@@ -9,7 +9,8 @@ namespace Contracts
 {
     public interface IStorageRepository
     {
-        IEnumerable<Storage> GetAllStorage(bool trackChanges);
-        Storage GetStorage(Guid storageId, bool trackChanges);
+        IEnumerable<Storage> GetAllStorage(Guid BuyerId,bool trackChanges);
+        Storage GetStorage(Guid BuyerId, Guid Id, bool trackChanges);
+        void CreateStorage(Guid BuyerId, Storage storage);
     }
 }

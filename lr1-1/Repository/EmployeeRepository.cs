@@ -15,8 +15,15 @@ namespace Repository
         : base(repositoryContext)
         {
         }
-        public IEnumerable<Employee> GetAllEmployee(Guid companyId, bool trackChanges) => FindByCondition(e => e.CompanyId.Equals(companyId), trackChanges)
+        public IEnumerable<Employee> GetAllEmployee(Guid companyId, bool trackChanges) => 
+            FindByCondition(e => e.CompanyId.Equals(companyId), trackChanges)
         .OrderBy(e => e.Name);
-        public Employee GetEmployee(Guid companyId, Guid id, bool trackChanges) =>FindByCondition(e => e.CompanyId.Equals(companyId) && e.Id.Equals(id),trackChanges).SingleOrDefault();
+        public Employee GetEmployee(Guid companyId, Guid id, bool trackChanges) =>
+            FindByCondition(e => e.CompanyId.Equals(companyId) && e.Id.Equals(id),trackChanges).SingleOrDefault();
+        public void CreateEmployeeForCompany(Guid companyId, Employee employee)
+        {
+            employee.CompanyId = companyId;
+            Create(employee);
+        }
     }
 }

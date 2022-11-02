@@ -11,5 +11,6 @@ namespace Contracts
     {
         IEnumerable<Manufacturer> GetAllManufacturer(bool trackChanges);
         Manufacturer GetManufacturer(Guid manufacturerId, bool trackChanges);
+        void CreateManufacturer(Manufacturer manufacturer);
     }
 }

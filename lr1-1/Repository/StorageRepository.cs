@@ -15,9 +15,16 @@ namespace Repository
     : base(repositoryContext)
         {
         }
-        public IEnumerable<Storage> GetAllStorage(bool trackChanges) =>
-          FindAll(trackChanges).OrderBy(c => c.BuyerID).ToList();
+        public void CreateStorage(Guid BuyerId, Storage storage)
+        {
+            storage.BuyerID = BuyerId;
+            Create(storage);
+        }
+        public IEnumerable<Storage> GetAllStorage(Guid BuyerId,bool trackChanges) =>
+          FindAll(trackChanges).OrderBy(c => c.Quantity).ToList();
 
-        public Storage GetStorage(Guid storageId, bool trackChanges) => FindByCondition(c => c.Id.Equals(storageId), trackChanges).SingleOrDefault();
+        public Storage GetStorage(Guid BuyerId, Guid Id, bool trackChanges) 
+            => FindByCondition(c => c.BuyerID.Equals(BuyerId) && c.Id.Equals(Id), trackChanges).SingleOrDefault();
     }
+   
 }

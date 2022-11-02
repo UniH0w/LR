@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Contracts;
 using Entities.DataTransferObjects;
+using Entities.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,7 +35,7 @@ namespace lr1_1.Controllers
             }).ToList();
             return Ok(manufacturerDto);
         }
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name ="GetManufacturer")]
         public IActionResult GetManufacturer(Guid id)
         {
             var manufacturer = _repository.Manufacturer.GetManufacturer(id, trackChanges: false);
@@ -48,6 +49,21 @@ namespace lr1_1.Controllers
                 var manufacturerDto = _mapper.Map<ManufacturerDto>(manufacturer);
                 return Ok(manufacturerDto);
             }
+        }
+        
+        [HttpPost]
+        public IActionResult CreateManufacturer1([FromBody] ManufacturerForCreationDto manufacturer)
+        {
+            if (manufacturer == null)
+            {
+                _logger.LogError("CompanyForCreationDto object sent from client is null.");
+                return BadRequest("CompanyForCreationDto object is null");
+            }
+            var manufacturerEntity = _mapper.Map<Manufacturer>(manufacturer);
+            _repository.Manufacturer.CreateManufacturer(manufacturerEntity);
+            _repository.Save();
+            var manufacturerToReturn = _mapper.Map<ManufacturerDto>(manufacturerEntity);
+            return CreatedAtRoute("CompanyById", new { id = manufacturerToReturn.Id }, manufacturerToReturn);
         }
     }
 }
