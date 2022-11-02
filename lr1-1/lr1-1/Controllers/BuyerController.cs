@@ -64,7 +64,38 @@ namespace lr1_1.Controllers
             _repository.Buyer.CreateBuyer(buyerEntity);
             _repository.Save();
             var buyerToReturn = _mapper.Map<BuyerDto>(buyerEntity);
-            return CreatedAtRoute("BuyerById", new { id = buyerToReturn.Id },buyerToReturn);
+            return CreatedAtRoute("BuyerById", new { id = buyerToReturn.Id }, buyerToReturn);
+        }
+        [HttpDelete("{id}")]
+        public IActionResult DeleteBuyer(Guid id)
+        {
+            var buyer = _repository.Buyer.GetBuyer(id, trackChanges: false);
+            if (buyer == null)
+            {
+                _logger.LogInfo($"Buyer with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+            _repository.Buyer.DeleteBuyer(buyer);
+            _repository.Save();
+            return NoContent();
+        }
+        [HttpPut("{id}")]
+        public IActionResult UpdatebBuyer(Guid id, [FromBody] BuyerForUpdateDto buyer)
+        {
+            if (buyer == null)
+            {
+                _logger.LogError("BuyerForUpdateDto object sent from client is null.");
+                return BadRequest("BuyerForUpdateDto object is null");
+            }
+            var buyerEntity = _repository.Buyer.GetBuyer(id, trackChanges: true);
+            if (buyerEntity == null)
+            {
+                _logger.LogInfo($"Sklad with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+            _mapper.Map(buyer, buyerEntity);
+            _repository.Save();
+            return NoContent();
         }
     }
 }

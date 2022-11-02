@@ -4,6 +4,7 @@ using Entities.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,6 +23,11 @@ namespace Repository
             order.IdBuyer1 = BuyerId;
             Create(order);
         }
+        public void DeleteOrder(Order order)
+        {
+            Delete(order);
+        }
+
         //public IEnumerable<Order> GetAllOrder(bool trackChanges) =>
         //  FindAll(trackChanges).OrderBy(c => c.Id).ToList();
         public IEnumerable<Order> GetAllOrder(Guid BuyerId, bool trackChanges) =>
@@ -31,5 +37,5 @@ namespace Repository
         public Order GetOrder( Guid BuyerId,Guid id, bool trackChanges)
             => FindByCondition(c =>  c.Id.Equals(BuyerId) && c.Id.Equals(id), trackChanges).SingleOrDefault();
     }
-   
+    
 }

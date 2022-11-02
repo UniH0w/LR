@@ -20,10 +20,13 @@ namespace Repository
 
         public Product GetProducts(Guid manufacturerId, Guid Id, bool trackChanges) => FindByCondition(c =>c.ManufacturerId.Equals(manufacturerId) && c.Id.Equals(Id), trackChanges).SingleOrDefault();
         public void CreateProduct(Guid ManufacturerId, Product product)
-
         {
             product.ManufacturerId = ManufacturerId;
             Create(product);
+        }
+        public void DeleteProduct(Product product)
+        {
+            Delete(product);
         }
     }
 }

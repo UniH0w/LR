@@ -28,11 +28,11 @@ public class Startup
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
-        services.AddControllers(config =>
-        {
+        services.AddControllers(config => {
             config.RespectBrowserAcceptHeader = true;
             config.ReturnHttpNotAcceptable = true;
-        }).AddXmlDataContractSerializerFormatters()
+        }).AddNewtonsoftJson()
+          .AddXmlDataContractSerializerFormatters()
         .AddCustomCSVFormatter();
     }
 

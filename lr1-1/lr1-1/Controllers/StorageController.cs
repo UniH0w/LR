@@ -37,7 +37,7 @@ namespace lr1_1.Controllers
             var storageDto = _mapper.Map<IEnumerable<StorageDto>>(storageFromDb);
             return Ok(storageFromDb);
         }
-        [HttpGet("{id}", Name ="GetStorageForBuyer")]
+        [HttpGet("{id}", Name = "GetStorageForBuyer")]
         public IActionResult GetStorage(Guid BuyerId, Guid Id)
         {
             var buyer = _repository.Storage.GetAllStorage(BuyerId, trackChanges: false);
@@ -78,6 +78,49 @@ namespace lr1_1.Controllers
                 BuyerId,
                 id = storageToReturn.Id
             }, storageToReturn);
+        }
+        [HttpDelete("{id}")]
+        public IActionResult DeleteBuyerForStorage(Guid BuyerId, Guid id)
+        {
+            var buyer = _repository.Buyer.GetBuyer(BuyerId, trackChanges: false);
+            if (buyer == null)
+            {
+                _logger.LogInfo($"Buyer with id: {BuyerId} doesn't exist in the database.");
+                return NotFound();
+            }
+            var buyerForStorage = _repository.Storage.GetStorage(BuyerId, id, trackChanges: false);
+            if (buyerForStorage == null)
+            {
+                _logger.LogInfo($"Storage with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+            _repository.Storage.DeleteStorage(buyerForStorage);
+            _repository.Save();
+            return NoContent();
+        }
+        [HttpPut("{id}")]
+        public IActionResult UpdateStorageForBuyer(Guid BuyerId, Guid id, [FromBody] BuyerForUpdateDto buyer)
+        {
+            if (buyer == null)
+            {
+                _logger.LogError("BuyerForUpdateDto object sent from client is null.");
+                return BadRequest("BuyerForUpdateDto object is null");
+            }
+            var storage = _repository.Storage.GetAllStorage(BuyerId, trackChanges: false);
+            if (storage == null)
+            {
+                _logger.LogInfo($"Sklad with id: {BuyerId} doesn't exist in the database.");
+                return NotFound();
+            }
+            var storageEntity = _repository.Storage.GetStorage(BuyerId, id, trackChanges:true);
+            if (storageEntity == null)
+            {
+                _logger.LogInfo($"Storage with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+            _mapper.Map(storage, storageEntity);
+            _repository.Save();
+            return NoContent();
         }
     }
 }

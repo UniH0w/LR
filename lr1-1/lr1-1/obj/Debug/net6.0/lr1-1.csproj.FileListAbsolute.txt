@@ -250,3 +250,6 @@ C:\Users\Uniho\Desktop\LR\lr1-1\lr1-1\obj\Debug\net6.0\refint\lr1-1.dll
 C:\Users\Uniho\Desktop\LR\lr1-1\lr1-1\obj\Debug\net6.0\lr1-1.pdb
 C:\Users\Uniho\Desktop\LR\lr1-1\lr1-1\obj\Debug\net6.0\lr1-1.genruntimeconfig.cache
 C:\Users\Uniho\Desktop\LR\lr1-1\lr1-1\obj\Debug\net6.0\ref\lr1-1.dll
+C:\Users\Uniho\Desktop\LR\lr1-1\lr1-1\bin\Debug\net6.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\Uniho\Desktop\LR\lr1-1\lr1-1\bin\Debug\net6.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\Uniho\Desktop\LR\lr1-1\lr1-1\bin\Debug\net6.0\Newtonsoft.Json.Bson.dll

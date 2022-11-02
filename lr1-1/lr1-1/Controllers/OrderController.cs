@@ -3,6 +3,7 @@ using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Numerics;
 
@@ -102,7 +103,101 @@ namespace lr1_1.Controllers
                     orderReturn.Id
                 }, orderReturn);
             }
+        [HttpDelete("{id}")]
+        public IActionResult DeleteOrderForBuyer(Guid BuyerId,Guid ProductId, Guid id)
+        {
+            var buyer = _repository.Buyer.GetBuyer(BuyerId, trackChanges: false);
+            if (buyer == null)
+            {
+                _logger.LogInfo($"Sklad with id: {BuyerId} doesn't exist in the database.");
+                return NotFound();
+            }
+            
+            var product = _repository.Product.GetAllProducts(ProductId, trackChanges: false);
+            if (product == null)
+            {
+                _logger.LogInfo($"Company with id: {ProductId} doesn't exist in the database.");
+                return NotFound();
+            }
+            var orderForbuyer = _repository.Order.GetOrder(BuyerId, id, trackChanges: false);
+            if (orderForbuyer == null)
+            {
+                _logger.LogInfo($"Plan with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+            _repository.Order.DeleteOrder(orderForbuyer);
+            _repository.Save();
+            return NoContent();
         }
+
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateOrderForBuyer(Guid BuyerId,  Guid ProductId, Guid id, [FromBody] OrderForUpdateDto order)
+        {
+            if (order == null)
+            {
+                _logger.LogError("OrderForUpdateDto object sent from client is null.");
+                return BadRequest("OrderForUpdateDto object is null");
+            }
+            var buyer = _repository.Buyer.GetBuyer(BuyerId, trackChanges: false);
+            if (buyer == null)
+            {
+                _logger.LogInfo($"Buyer with id: {BuyerId} doesn't exist in the database.");
+                return NotFound();
+            }
+            var product = _repository.Product.GetAllProducts(ProductId, trackChanges: false);
+            if (product == null)
+            {
+                _logger.LogInfo($"Product with id: {ProductId} doesn't exist in the database.");
+                return NotFound();
+            }
+            var orderEntity = _repository.Order.GetOrder(BuyerId, id,
+           trackChanges:
+            true);
+            if (orderEntity == null)
+            {
+                _logger.LogInfo($" Order with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+            _mapper.Map(buyer, orderEntity);
+            _repository.Save();
+            return NoContent();
+        }
+
+        [HttpPatch("{id}")]
+        public IActionResult PatchUpdateOrder(Guid BuyerId, Guid ProductId, Guid id, [FromBody] JsonPatchDocument<OrderForUpdateDto> order)
+        {
+            if (order == null)
+            {
+                _logger.LogError("OrderForUpdateDto object sent from client is null.");
+                return BadRequest("OrderForUpdateDto object is null");
+            }
+            var buyer = _repository.Buyer.GetBuyer(BuyerId, trackChanges: false);
+            if (buyer == null)
+            {
+                _logger.LogInfo($"Sklad1 with id: {BuyerId} doesn't exist in the database.");
+                return NotFound();
+            }
+            var product = _repository.Product.GetAllProducts(ProductId, trackChanges: false);
+            if (product == null)
+            {
+                _logger.LogInfo($"Product with id: {ProductId} doesn't exist in the database.");
+                return NotFound();
+            }
+            var orderEntity = _repository.Order.GetOrder(BuyerId, id, true);
+            if (orderEntity == null)
+            {
+                _logger.LogInfo($"Order with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+            var orderToPatch = _mapper.Map<OrderForUpdateDto>(orderEntity);
+            order.ApplyTo(orderToPatch);
+            _mapper.Map(orderToPatch, orderEntity);
+            _repository.Save();
+            return NoContent();
+        }
+
     }
+}
  
 

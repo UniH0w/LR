@@ -20,6 +20,10 @@ namespace Repository
             storage.BuyerID = BuyerId;
             Create(storage);
         }
+        public void DeleteStorage(Storage storage)
+        {
+            Delete(storage);
+        }
         public IEnumerable<Storage> GetAllStorage(Guid BuyerId,bool trackChanges) =>
           FindAll(trackChanges).OrderBy(c => c.Quantity).ToList();
 

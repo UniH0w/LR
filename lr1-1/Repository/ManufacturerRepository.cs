@@ -4,6 +4,7 @@ using Entities.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,7 +22,10 @@ namespace Repository
         public Manufacturer GetManufacturer(Guid manufacturerId, bool trackChanges)
             => FindByCondition(c => c.Id.Equals(manufacturerId), trackChanges).SingleOrDefault();
         public void CreateManufacturer(Manufacturer manufacturer) => Create(manufacturer);
-
+        public void DeleteManufacturer(Manufacturer manufacturer)
+        {
+            Delete(manufacturer);
+        }
 
 
     }

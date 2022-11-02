@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Numerics;
 
 namespace Repository
 {
@@ -23,6 +24,10 @@ namespace Repository
         public void CreateBuyer (Buyer buyer)
         {
             Create(buyer);
+        }
+        public void DeleteBuyer(Buyer buyer)
+        {
+            Delete(buyer);
         }
     }
 }

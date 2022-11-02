@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,5 +13,6 @@ namespace Contracts
         IEnumerable<Order> GetAllOrder(Guid BuyerId,bool trackChanges);
         Order GetOrder(Guid BuyerId,Guid id, bool trackChanges);
         void CreateOrder(Guid ProductId, Guid BuyerId, Order order);
+        void DeleteOrder(Order order);
     }
 }

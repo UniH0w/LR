@@ -56,14 +56,46 @@ namespace lr1_1.Controllers
         {
             if (manufacturer == null)
             {
-                _logger.LogError("CompanyForCreationDto object sent from client is null.");
-                return BadRequest("CompanyForCreationDto object is null");
+                _logger.LogError("ManufacturerForCreationDto object sent from client is null.");
+                return BadRequest("ManufacturerCreationDto object is null");
             }
             var manufacturerEntity = _mapper.Map<Manufacturer>(manufacturer);
             _repository.Manufacturer.CreateManufacturer(manufacturerEntity);
             _repository.Save();
             var manufacturerToReturn = _mapper.Map<ManufacturerDto>(manufacturerEntity);
-            return CreatedAtRoute("CompanyById", new { id = manufacturerToReturn.Id }, manufacturerToReturn);
+            return CreatedAtRoute("ManufacturerById", new { id = manufacturerToReturn.Id }, manufacturerToReturn);
+        }
+        [HttpDelete("{id}")]
+        public IActionResult DeleteManufacturer(Guid id)
+        {
+            var  manufacturer = _repository.Manufacturer.GetManufacturer(id, trackChanges: false);
+            if (manufacturer == null)
+            {
+                _logger.LogInfo($"Manufacturer with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+            _repository.Manufacturer.DeleteManufacturer(manufacturer);
+            _repository.Save();
+            return NoContent();
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateManufacturer(Guid id, [FromBody] Manufacturer manufacturer)
+        {
+            if (manufacturer == null)
+            {
+                _logger.LogError("ManufacturerForUpdateDto object sent from client is null.");
+                return BadRequest("ManufacturerForUpdateDto object is null");
+            }
+            var manufacturerEntity = _repository.Manufacturer.GetManufacturer(id, trackChanges: true);
+            if (manufacturerEntity == null)
+            {
+                _logger.LogInfo($"Manufacturer with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+            _mapper.Map(manufacturer, manufacturerEntity);
+            _repository.Save();
+            return NoContent();
         }
     }
 }

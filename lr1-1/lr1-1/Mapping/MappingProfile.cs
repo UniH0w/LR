@@ -24,6 +24,9 @@ namespace lr1_1.Mapping
             CreateMap<OrderForCreationDto, Order>();
             CreateMap <ProductForCreationDto,Product>();
             CreateMap<StorageForCreationDto, Storage>();
+            CreateMap<CompanyForUpdateDto, Company>();
+            CreateMap<EmployeeForUpdateDto, Employee>().ReverseMap();
+
         }
     }
 }
