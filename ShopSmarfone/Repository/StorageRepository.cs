@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Entities.RequestFeatures;
 
 namespace Repository
 {
@@ -28,6 +29,11 @@ namespace Repository
         public void DeleteStorage(Storage storage)
         {
             Delete(storage);
+        }
+        public async Task<PagedList<Storage>> GetAllStorageAsync(Guid ProductId, StorageParameters storageParameters, bool trackChanges)
+        {
+            var storage = await FindByCondition(e => e.ProductId.Equals(ProductId), trackChanges).OrderBy(e => e.FullNameProduct).ToListAsync();
+            return PagedList<Storage>.ToPagedList(storage, storageParameters.PageNumber, storageParameters.PageSize);
         }
     }
 }

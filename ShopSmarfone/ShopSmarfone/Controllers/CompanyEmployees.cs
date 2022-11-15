@@ -2,10 +2,12 @@
 using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
+using ShopSmarfone.ActionFilters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
-
+using Entities.RequestFeatures;
+using Newtonsoft.Json;
 
 namespace ShopSmarfone.Controllers
 {
@@ -41,28 +43,19 @@ namespace ShopSmarfone.Controllers
             }
         }
         [HttpGet]
-        public async Task<IActionResult> GetCompanies()
+        public async Task<IActionResult> GetCompanies([FromQuery] CompanyParameters parameters)
         {
-            try
-            {
-                var companies =  await _repository.Company.GetAllCompaniesAsync(trackChanges: false);
-                var companiesDto = _mapper.Map<IEnumerable<CompanyDto>>(companies);
-                return Ok(companiesDto);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Something went wrong in the {nameof(GetCompanies)} action {ex}  ");
-                return StatusCode(500, "Internal server error");
-            }
+
+             var companies =  await _repository.Company.GetAllCompaniesAsync(trackChanges: false, parameters);
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(companies.MetaData));
+            var companiesDto = _mapper.Map<IEnumerable<CompanyDto>>(companies);
+               return Ok(companiesDto);
+            
         }
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public  async Task<IActionResult> CreateCompany([FromBody] CompanyForCreationDto company)
-        {
-            if (company == null)
-            {
-                _logger.LogError("CompanyForCreationDto object sent from client is null.");
-                return BadRequest("CompanyForCreationDto object is null");
-            }
+        {   
             var companyEntity = _mapper.Map<Company>(company);
              _repository.Company.CreateCompany(companyEntity);
             await _repository.SaveAsync();
@@ -70,32 +63,21 @@ namespace ShopSmarfone.Controllers
             return CreatedAtRoute("CompanyById", new { id = companyToReturn.Id }, companyToReturn);
         }
         [HttpDelete("{id}")]
+        [ServiceFilter(typeof(ValidateCompanyExistsAttribute))]
         public async Task <IActionResult> DeleteCompany(Guid id)
         {
             var company = await _repository.Company.GetCompanyAsync(id, trackChanges: false);
-            if (company == null)
-            {
-                _logger.LogInfo($"Company with id: {id} doesn't exist in the database.");
-                return NotFound();
-            }
+            
             _repository.Company.DeleteCompany(company);
            await _repository.SaveAsync();
             return NoContent();
         }
         [HttpPut("{id}")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [ServiceFilter(typeof(ValidateCompanyExistsAttribute))]
         public async Task <IActionResult> UpdateCompany(Guid id, [FromBody] CompanyForUpdateDto company)
         {
-            if (company == null)
-            {
-                _logger.LogError("CompanyForUpdateDto object sent from client is null.");
-                return BadRequest("CompanyForUpdateDto object is null");
-            }
-            var companyEntity = await _repository.Company.GetCompanyAsync(id, trackChanges: true);
-            if (companyEntity == null)
-            {
-                _logger.LogInfo($"Company with id: {id} doesn't exist in the database.");
-                return NotFound();
-            }
+            var companyEntity = HttpContext.Items["company"] as Company;
             _mapper.Map(company, companyEntity);
             await _repository.SaveAsync();
             return NoContent();

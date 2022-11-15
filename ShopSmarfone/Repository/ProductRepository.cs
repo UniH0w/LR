@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Entities.RequestFeatures;
 
 namespace Repository
 {
@@ -28,6 +29,11 @@ namespace Repository
         public void DeleteProduct(Product product)
         {
             Delete(product);
+        }
+        public async Task<PagedList<Product>> GetAllProductAsync(bool trackChanges, ProductParameters productParameters)
+        {
+            var product = await FindAll(trackChanges).OrderBy(e => e.NameModels).ToListAsync();
+            return PagedList<Product>.ToPagedList(product, productParameters.PageNumber, productParameters.PageSize);
         }
 
 

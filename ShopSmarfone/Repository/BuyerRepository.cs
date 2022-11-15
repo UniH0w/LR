@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using Entities;
 using Entities.Models;
+using Entities.RequestFeatures;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,11 @@ namespace Repository
         public void DeleteBuyer(Buyer buyer)
         {
             Delete(buyer);
+        }
+        public async Task<PagedList<Buyer>> GetAllBuyerAsync(bool trackChanges,BuyerParameters buyerParameters)
+        {
+            var buyer = await FindAll(trackChanges).OrderBy(e => e.Name).ToListAsync();
+            return PagedList<Buyer>.ToPagedList(buyer , buyerParameters.PageNumber, buyerParameters.PageSize);
         }
     }
 }

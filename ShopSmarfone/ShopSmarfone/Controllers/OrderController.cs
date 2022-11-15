@@ -2,9 +2,13 @@
 using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
+using Entities.RequestFeatures;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using ShopSmarfone.ActionFilters;
+using System.Net.Sockets;
 
 namespace ShopSmarfone.Controllers
 {
@@ -23,7 +27,7 @@ namespace ShopSmarfone.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        public async Task <IActionResult> OrderForProduct(Guid BuyerId)
+        public async Task <IActionResult> OrderForProduct(Guid BuyerId, [FromQuery] OrderParameters orderParameters)
         {
             var buyer = await _repository.Buyer.GetBuyerAsync(BuyerId, trackChanges: false);
             if (buyer == null)
@@ -31,7 +35,8 @@ namespace ShopSmarfone.Controllers
                 _logger.LogInfo($"Buyer with id: {BuyerId} doesn't exist in the database.");
                 return NotFound();
             }
-            var OrderFromDb = await _repository.Order.GetAllOrderAsync(BuyerId, false);
+            var OrderFromDb = await _repository.Order.GetAllOrderAsync(BuyerId,orderParameters, false);
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(OrderFromDb.MetaData));
             var OrderDto = _mapper.Map<IEnumerable<OrderDto>>(OrderFromDb);
             return Ok(OrderDto);
         }
@@ -56,18 +61,10 @@ namespace ShopSmarfone.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task <IActionResult> CreateOrder(Guid BuyerId, [FromBody] OrderForCreationDto order)
         {
-            if (order == null)
-            {
-                _logger.LogError("OrderCreationDto object sent from client is null.");
-                return BadRequest("OrderCreationDto object is null");
-            }
-            if (!ModelState.IsValid)
-            {
-                _logger.LogError("Invalid model state for the EmployeeForUpdateDto object");
-                return UnprocessableEntity(ModelState);
-            }
+           
             var buyer = await _repository.Buyer.GetBuyerAsync(BuyerId, trackChanges: false);
             if (buyer == null)
             {
@@ -85,21 +82,12 @@ namespace ShopSmarfone.Controllers
             }, orderReturn);
         }
         [HttpDelete("{id}")]
+        [ServiceFilter(typeof(ValidateOrderExistsAttribute))]
         public async Task <IActionResult> DeleteOrderForBuyer(Guid BuyerId, Guid id)
         {
-            var buyer = await _repository.Buyer.GetBuyerAsync(BuyerId, trackChanges: false);
-            if (buyer == null)
-            {
-                _logger.LogInfo($"Sklad with id: {BuyerId} doesn't exist in the database.");
-                return NotFound();
-            }
 
-            var orderForbuyer = await _repository.Order.GetOrderAsync(BuyerId, id, trackChanges: false);
-            if (orderForbuyer == null)
-            {
-                _logger.LogInfo($"Plan with id: {id} doesn't exist in the database.");
-                return NotFound();
-            }
+            var orderForbuyer = HttpContext.Items["order"] as Order;
+
             _repository.Order.DeleteOrder(orderForbuyer);
             await _repository.SaveAsync();
             return NoContent();
@@ -107,36 +95,18 @@ namespace ShopSmarfone.Controllers
 
 
         [HttpPut("{id}")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [ServiceFilter(typeof(ValidateOrderExistsAttribute))]
         public async Task <IActionResult> UpdateOrderForBuyer(Guid BuyerId, Guid id, [FromBody] OrderForUpdateDto order)
         {
-            if (order == null)
-            {
-                _logger.LogError("OrderForUpdateDto object sent from client is null.");
-                return BadRequest("OrderForUpdateDto object is null");
-            }
-            if (!ModelState.IsValid)
-            {
-                _logger.LogError("Invalid model state for the EmployeeForUpdateDto object");
-                return UnprocessableEntity(ModelState);
-            }
-            var buyer = await _repository.Buyer.GetBuyerAsync(BuyerId, trackChanges: false);
-            if (buyer == null)
-            {
-                _logger.LogInfo($"Buyer with id: {BuyerId} doesn't exist in the database.");
-                return NotFound();
-            }
-            var orderEntity = await _repository.Order.GetOrderAsync(BuyerId, id, trackChanges: true);
-            if (orderEntity == null)
-            {
-                _logger.LogInfo($" Order with id: {id} doesn't exist in the database.");
-                return NotFound();
-            }
+            var orderEntity = HttpContext.Items["order"] as Order;
             _mapper.Map(order, orderEntity);
             await _repository.SaveAsync();
             return NoContent();
         }
 
         [HttpPatch("{id}")]
+        [ServiceFilter(typeof(ValidateOrderExistsAttribute))]
         public async Task <IActionResult> PatchUpdateOrder(Guid BuyerId, Guid id, [FromBody] JsonPatchDocument<OrderForUpdateDto> order)
         {
             if (order == null)
@@ -144,19 +114,7 @@ namespace ShopSmarfone.Controllers
                 _logger.LogError("OrderForUpdateDto object sent from client is null.");
                 return BadRequest("OrderForUpdateDto object is null");
             }
-            var buyer = await _repository.Buyer.GetBuyerAsync(BuyerId, trackChanges: false);
-            if (buyer == null)
-            {
-                _logger.LogInfo($"Buyer with id: {BuyerId} doesn't exist in the database.");
-                return NotFound();
-            }
-
-            var orderEntity = await _repository.Order.GetOrderAsync(BuyerId, id, true);
-            if (orderEntity == null)
-            {
-                _logger.LogInfo($"Order with id: {id} doesn't exist in the database.");
-                return NotFound();
-            }
+            var orderEntity = HttpContext.Items["order"] as Order;
             var orderToPatch = _mapper.Map<OrderForUpdateDto>(orderEntity);
             order.ApplyTo(orderToPatch, ModelState);
             TryValidateModel(orderToPatch);

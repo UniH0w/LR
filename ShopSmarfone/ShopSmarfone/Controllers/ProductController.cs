@@ -2,8 +2,11 @@
 using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
+using Entities.RequestFeatures;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using ShopSmarfone.ActionFilters;
 
 namespace ShopSmarfone.Controllers
 {
@@ -21,19 +24,14 @@ namespace ShopSmarfone.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        public async Task <IActionResult> GetProduct()
+        public async Task <IActionResult> GetProduct([FromQuery] ProductParameters productParameters)
         {
-            try
-            {
-                var products = await _repository.Product.GetAllProductsAsync(trackChanges: false);
-                var productDto = _mapper.Map<IEnumerable<ProductDto>>(products);
+    
+            var products = await _repository.Product.GetAllProductAsync(false, productParameters);
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(products.MetaData));
+            var productDto = _mapper.Map<IEnumerable<ProductDto>>(products);
                 return Ok(productDto);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Something went wrong in the {nameof(GetProducts)} action {ex}  ");
-                return StatusCode(500, "Internal server error");
-            }
+     
         }
         [HttpGet("{id}", Name = "ProductById")]
         public async Task <IActionResult> GetProducts(Guid id)
@@ -51,18 +49,9 @@ namespace ShopSmarfone.Controllers
             }
         }
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task <IActionResult> CreateBuyer([FromBody] ProductForCreationDto product)
         {
-            if (product == null)
-            {
-                _logger.LogError("ProductForCreationDto object sent from client is null.");
-                return BadRequest("ProductForCreationDto object is null");
-            }
-            if (!ModelState.IsValid)
-            {
-                _logger.LogError("Invalid model state for the EmployeeForUpdateDto object");
-                return UnprocessableEntity(ModelState);
-            }
             var productEntity = _mapper.Map<Product>(product);
             _repository.Product.CreateProduct(productEntity);
             await _repository.SaveAsync();
@@ -70,37 +59,20 @@ namespace ShopSmarfone.Controllers
             return CreatedAtRoute("ProductById", new { id = productToReturn.Id }, productToReturn);
         }
         [HttpDelete("{id}")]
+        [ServiceFilter(typeof(ValidateProductExistsAttribute))]
         public async Task <IActionResult> DeleteProduct(Guid id)
         {
-            var product = await _repository.Product.GetProductsAsync(id, trackChanges: false);
-            if (product == null)
-            {
-                _logger.LogInfo($"Product with id: {id} doesn't exist in the database.");
-                return NotFound();
-            }
+            var product = HttpContext.Items["product"] as Product;
             _repository.Product.DeleteProduct(product);
             await _repository.SaveAsync();
             return NoContent();
         }
         [HttpPut("{id}")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [ServiceFilter(typeof(ValidateProductExistsAttribute))]
         public async Task <IActionResult> UpdateProduct(Guid id, [FromBody] ProdutctForUpdateDto product)
         {
-            if (product == null)
-            {
-                _logger.LogError("ProductForUpdateDto object sent from client is null.");
-                return BadRequest("ProductForUpdateDto object is null");
-            }
-            if (!ModelState.IsValid)
-            {
-                _logger.LogError("Invalid model state for the EmployeeForUpdateDto object");
-                return UnprocessableEntity(ModelState);
-            }
-            var productEntity = await _repository.Product.GetProductsAsync(id, trackChanges: true);
-            if (productEntity == null)
-            {
-                _logger.LogInfo($"Product with id: {id} doesn't exist in the database.");
-                return NotFound();
-            }
+            var productEntity = HttpContext.Items["product"] as Product;
             _mapper.Map(product, productEntity);
             await _repository.SaveAsync();
             return NoContent();

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Entities.RequestFeatures;
 
 namespace Repository
 {
@@ -34,6 +35,11 @@ namespace Repository
         {      
             Delete(order);
         }
-        
+        public async Task<PagedList<Order>> GetAllOrderAsync(Guid BuyeryId, OrderParameters orderParameters, bool trackChanges)
+        {
+            var order = await FindByCondition(e => e.BuyerId.Equals(BuyeryId), trackChanges).OrderBy(e => e.PurchaseName).ToListAsync();
+            return PagedList<Order>.ToPagedList(order, orderParameters.PageNumber, orderParameters.PageSize);
+        }
+
     }
 }

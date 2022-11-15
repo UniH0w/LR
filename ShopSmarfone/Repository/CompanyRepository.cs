@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Entities.RequestFeatures;
 
 namespace Repository
 {
@@ -28,6 +29,11 @@ namespace Repository
         public void DeleteCompany(Company company)
         {
             Delete(company);
+        }
+        public async Task<PagedList<Company>> GetAllCompaniesAsync(bool trackChanges, CompanyParameters parameters)
+        {
+            var companies = await FindAll(trackChanges).OrderBy(e => e.Name).ToListAsync();
+            return PagedList<Company>.ToPagedList(companies, parameters.PageNumber, parameters.PageSize);
         }
     }
 }

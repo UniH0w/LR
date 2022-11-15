@@ -2,8 +2,11 @@
 using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
+using Entities.RequestFeatures;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using ShopSmarfone.ActionFilters;
 
 namespace ShopSmarfone.Controllers
 {
@@ -24,19 +27,14 @@ namespace ShopSmarfone.Controllers
 
         }
         [HttpGet]
-        public async Task <IActionResult> GetBuyer()
+        public async Task <IActionResult> GetBuyer([FromQuery] BuyerParameters buyerParameters)
         {
-            try
-            {
-                var buyers = await _repository.Buyer.GetAllBuyerAsync(trackChanges: false);
-                var buyersDto = _mapper.Map<IEnumerable<BuyerDto>>(buyers);
-                return Ok(buyersDto);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Something went wrong in the {nameof(GetBuyers)} action {ex}  ");
-                return StatusCode(500, "Internal server error");
-            }
+             var buyers = await _repository.Buyer.GetAllBuyerAsync(false, buyerParameters);
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(buyers.MetaData));
+            var buyersDto = _mapper.Map<IEnumerable<BuyerDto>>(buyers);
+             return Ok(buyersDto);
+            
+            
         }
         [HttpGet("{id}", Name = "BuyerById")]
         public async Task <IActionResult> GetBuyers(Guid id)
@@ -54,18 +52,9 @@ namespace ShopSmarfone.Controllers
             }
         }
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task <IActionResult> CreateBuyer([FromBody] BuyerForCreationDto buyer)
         {
-            if (buyer == null)
-            {
-                _logger.LogError("BuyerForCreationDto object sent from client is null.");
-                return BadRequest("BuyerForCreationDto object is null");
-            }
-            if (!ModelState.IsValid)
-            {
-                _logger.LogError("Invalid model state for the EmployeeForUpdateDto object");
-                return UnprocessableEntity(ModelState);
-            }
             var buyerEntity = _mapper.Map<Buyer>(buyer);
             _repository.Buyer.CreateBuyer(buyerEntity);
             await _repository.SaveAsync();
@@ -73,37 +62,20 @@ namespace ShopSmarfone.Controllers
             return CreatedAtRoute("BuyerById", new { id = buyerToReturn.Id }, buyerToReturn);
         }
         [HttpDelete("{id}")]
+        [ServiceFilter(typeof(ValidateBuyerExistsAttribute))]
         public async Task <IActionResult> DeleteBuyer(Guid id)
         {
-            var buyer = await _repository.Buyer.GetBuyerAsync(id, trackChanges: false);
-            if (buyer == null)
-            {
-                _logger.LogInfo($"Buyer with id: {id} doesn't exist in the database.");
-                return NotFound();
-            }
+            var buyer = HttpContext.Items["buyer"] as Buyer;
             _repository.Buyer.DeleteBuyer(buyer);
             await _repository.SaveAsync();
             return NoContent();
         }
         [HttpPut("{id}")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [ServiceFilter(typeof(ValidateBuyerExistsAttribute))]
         public async Task <IActionResult> UpdateBuyer(Guid id, [FromBody] BuyerForUpdateDto buyer)
         {
-            if (buyer == null)
-            {
-                _logger.LogError("buyerForUpdateDto object sent from client is null.");
-                return BadRequest("buyerForUpdateDto object is null");
-            }
-            if (!ModelState.IsValid)
-            {
-                _logger.LogError("Invalid model state for the EmployeeForUpdateDto object");
-                return UnprocessableEntity(ModelState);
-            }
-            var buyerEntity =  await _repository.Buyer.GetBuyerAsync(id, trackChanges: true);
-            if (buyerEntity == null)
-            {
-                _logger.LogInfo($"buyer with id: {id} doesn't exist in the database.");
-                return NotFound();
-            }
+            var buyerEntity = HttpContext.Items["buyer"] as Buyer;
             _mapper.Map(buyer, buyerEntity);
             await _repository.SaveAsync();
             return NoContent();

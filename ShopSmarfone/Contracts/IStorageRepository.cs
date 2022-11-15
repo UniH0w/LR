@@ -1,4 +1,5 @@
 ﻿using Entities.Models;
+using Entities.RequestFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Contracts
 {
     public interface IStorageRepository
     {
-        Task <IEnumerable<Storage>> GetAllStorageAsync(Guid ProductId, bool trackChanges);
+        Task <PagedList<Storage>> GetAllStorageAsync(Guid ProductId, StorageParameters storageParameters, bool trackChanges);
         Task <Storage> GetStorageAsync(Guid ProductId, Guid Id, bool trackChanges);
         void CreateStorage(Guid ProductId, Storage storage);
         void DeleteStorage(Storage storage);
