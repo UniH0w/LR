@@ -9,6 +9,7 @@ using ShopSmarfone.ActionFilters;
 using ShopSmarfone.ActionFilters;
 using Entities.DataTransferObjects;
 using Repository.DataShaping;
+using Repository;
 
 namespace ShopSmarfone
 {
@@ -45,6 +46,11 @@ namespace ShopSmarfone
                 options.SuppressModelStateInvalidFilter = true;
             });
             services.ConfigureVersioning();
+            services.AddAuthentication();
+            services.ConfigureIdentity();
+            services.ConfigureJWT(Configuration);
+            services.AddScoped<IAuthenticationManager, AuthenticationManager>();
+
             services.AddScoped<IDataShaper<EmployeeDto>, DataShaper<EmployeeDto>>();
             services.AddScoped<IDataShaper<BuyerDto>, DataShaper<BuyerDto>>();
             services.AddScoped<IDataShaper<StorageDto>, DataShaper<StorageDto>>();
@@ -78,6 +84,7 @@ namespace ShopSmarfone
                 ForwardedHeaders = ForwardedHeaders.All
             });
             app.UseRouting();
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 

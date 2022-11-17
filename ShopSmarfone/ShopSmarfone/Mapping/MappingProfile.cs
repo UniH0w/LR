@@ -28,6 +28,7 @@ namespace ShopSmarfone.Mapping
             CreateMap<OrderForUpdateDto, Order>().ReverseMap();
             CreateMap<ProdutctForUpdateDto, Product>();
             CreateMap<StorageForUpdateDto, Storage>().ReverseMap();
+            CreateMap<UserForRegistrationDto, User>();
         }
     }
 }

@@ -3,6 +3,7 @@ using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
 using Entities.RequestFeatures;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -26,7 +27,7 @@ namespace ShopSmarfone.Controllers
             _mapper = mapper;
             _dataShaper = dataShaper;
         }
-        [HttpGet]
+        [HttpGet, Authorize]
         [HttpHead]
         public async Task <IActionResult> GetStorageForProduct(Guid ProductId, [FromQuery] StorageParameters storageParameters)
         {
@@ -41,7 +42,7 @@ namespace ShopSmarfone.Controllers
             var productDto = _mapper.Map<IEnumerable<StorageDto>>(productFromDb);
             return Ok(_dataShaper.ShapeData(productDto, storageParameters.Fields));
         }
-        [HttpGet("{id}", Name = "GetStorageForProduct")]
+        [HttpGet("{id}", Name = "GetStorageForProduct"), Authorize]
         [HttpHead("{id}")]
         public async Task <IActionResult> GetStorageForCProduct(Guid ProductId, Guid id)
         {
@@ -62,7 +63,7 @@ namespace ShopSmarfone.Controllers
             var storage = _mapper.Map<StorageDto>(storageDb);
             return Ok(storage);
         }
-        [HttpPost]
+        [HttpPost, Authorize]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task <IActionResult> CreateStorageForProduct(Guid ProductId, [FromBody] StorageForCreationDto storage)
         {
@@ -82,7 +83,7 @@ namespace ShopSmarfone.Controllers
                 id = storageToReturn.Id
             }, storageToReturn);
         }
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize]
         [ServiceFilter(typeof(ValidateStorageExistsAttribute))]
         public async Task <IActionResult> DeleteEmployeeForCompany(Guid ProductId, Guid id)
         {
@@ -91,7 +92,7 @@ namespace ShopSmarfone.Controllers
             await _repository.SaveAsync();
             return NoContent();
         }
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidateStorageExistsAttribute))]
         public async Task <IActionResult> UpdateStorageForProduct(Guid ProductId, Guid id, [FromBody] StorageForUpdateDto storage)
@@ -101,7 +102,7 @@ namespace ShopSmarfone.Controllers
             await _repository.SaveAsync();
             return NoContent();
         }
-        [HttpOptions]
+        [HttpOptions, Authorize]
         public IActionResult GetOptions()
         {
             Response.Headers.Add("Allow", "GET, OPTIONS, POST, DELETE, PUT, PATCH");

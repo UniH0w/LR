@@ -198,3 +198,9 @@ C:\Users\Uniho\Desktop\LR\ShopSmarfone\ShopSmarfone\obj\Debug\net6.0\ShopSmarfon
 C:\Users\Uniho\Desktop\LR\ShopSmarfone\ShopSmarfone\obj\Debug\net6.0\ref\ShopSmarfone.dll
 C:\Users\Uniho\Desktop\LR\ShopSmarfone\ShopSmarfone\bin\Debug\net6.0\System.Linq.Dynamic.Core.dll
 C:\Users\Uniho\Desktop\LR\ShopSmarfone\ShopSmarfone\bin\Debug\net6.0\Microsoft.AspNetCore.Mvc.Versioning.dll
+C:\Users\Uniho\Desktop\LR\ShopSmarfone\ShopSmarfone\bin\Debug\net6.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+C:\Users\Uniho\Desktop\LR\ShopSmarfone\ShopSmarfone\bin\Debug\net6.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+C:\Users\Uniho\Desktop\LR\ShopSmarfone\ShopSmarfone\bin\Debug\net6.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Users\Uniho\Desktop\LR\ShopSmarfone\ShopSmarfone\bin\Debug\net6.0\Microsoft.Extensions.Identity.Core.dll
+C:\Users\Uniho\Desktop\LR\ShopSmarfone\ShopSmarfone\bin\Debug\net6.0\Microsoft.Extensions.Identity.Stores.dll
+C:\Users\Uniho\Desktop\LR\ShopSmarfone\ShopSmarfone\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

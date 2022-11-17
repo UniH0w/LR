@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ShopSmarfone.Controllers
 {
@@ -29,7 +30,7 @@ namespace ShopSmarfone.Controllers
             _dataShaper = dataShaper;
 
         }
-        [HttpGet]
+        [HttpGet, Authorize]
         [HttpHead]
         public async Task <IActionResult> GetEmployeesForCompany(Guid companyId, [FromQuery] EmployeeParameters employeeParameters)
         {
@@ -47,7 +48,7 @@ namespace ShopSmarfone.Controllers
             return Ok(_dataShaper.ShapeData(employeeDto, employeeParameters.Fields));
 
         }
-        [HttpGet("{id}", Name = "GetEmployeeForCompany")]
+        [HttpGet("{id}", Name = "GetEmployeeForCompany"), Authorize]
         [HttpHead("{id}")]
         public async Task <IActionResult> GetEmployeeForCompany(Guid companyId, Guid id)
         {
@@ -68,7 +69,7 @@ namespace ShopSmarfone.Controllers
             var employee = _mapper.Map<EmployeeDto>(employeeDb);
             return Ok(employee);
         }
-        [HttpPost]
+        [HttpPost, Authorize]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task <IActionResult> CreateEmployeeForCompany(Guid companyId, [FromBody] EmployeeForCreationDto employee)
         {
@@ -83,7 +84,7 @@ namespace ShopSmarfone.Controllers
                 id = employeeToReturn.Id
             }, employeeToReturn);
         }
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize]
       
         [ServiceFilter(typeof(ValidateEmployeeForCompanyExistsAttribute))]
         public async Task <IActionResult> DeleteEmployeeForCompany(Guid companyId, Guid id)
@@ -93,7 +94,7 @@ namespace ShopSmarfone.Controllers
             await _repository.SaveAsync();
             return NoContent();
         }
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidateEmployeeForCompanyExistsAttribute))]
 
@@ -105,7 +106,7 @@ namespace ShopSmarfone.Controllers
             await _repository.SaveAsync();
             return NoContent();
         }
-        [HttpPatch("{id}")]
+        [HttpPatch("{id}"), Authorize]
         [ServiceFilter(typeof(ValidateEmployeeForCompanyExistsAttribute))]
         public async Task <IActionResult> PartiallyUpdateEmployeeForCompany(Guid companyId, Guid id, [FromBody] JsonPatchDocument<EmployeeForUpdateDto> patchDoc)
         {

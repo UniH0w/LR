@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Entities.RequestFeatures;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ShopSmarfone.Controllers
 {
@@ -49,7 +50,7 @@ namespace ShopSmarfone.Controllers
             Response.Headers.Add("Allow", "GET, OPTIONS, POST");
             return Ok();
         }
-        [HttpGet]
+        [HttpGet(Name = "GetCompanies"), Authorize(Roles = "User")]
         [HttpHead]
         public async Task<IActionResult> GetCompanies([FromQuery] CompanyParameters parameters)
         {

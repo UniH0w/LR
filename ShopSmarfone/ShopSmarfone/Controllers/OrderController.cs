@@ -3,6 +3,7 @@ using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
 using Entities.RequestFeatures;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +29,7 @@ namespace ShopSmarfone.Controllers
             _mapper = mapper;
             _dataShaper = dataShaper;
         }
-        [HttpGet]
+        [HttpGet, Authorize]
         [HttpHead]
         public async Task <IActionResult> OrderForProduct(Guid BuyerId, [FromQuery] OrderParameters orderParameters)
         {
@@ -44,7 +45,7 @@ namespace ShopSmarfone.Controllers
             return Ok(_dataShaper.ShapeData(OrderDto, orderParameters.Fields));
         }
 
-        [HttpGet("{id}", Name = "GetOderForBuyer")]
+        [HttpGet("{id}", Name = "GetOderForBuyer"), Authorize]
         [HttpHead("{id}")]
         public async Task <IActionResult> GetOrderForBuyer(Guid BuyerId, Guid id)
         {
@@ -64,7 +65,7 @@ namespace ShopSmarfone.Controllers
             return Ok(order);
         }
 
-        [HttpPost]
+        [HttpPost, Authorize]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task <IActionResult> CreateOrder(Guid BuyerId, [FromBody] OrderForCreationDto order)
         {
@@ -85,7 +86,7 @@ namespace ShopSmarfone.Controllers
                 orderReturn.Id
             }, orderReturn);
         }
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize]
         [ServiceFilter(typeof(ValidateOrderExistsAttribute))]
         public async Task <IActionResult> DeleteOrderForBuyer(Guid BuyerId, Guid id)
         {
@@ -98,7 +99,7 @@ namespace ShopSmarfone.Controllers
         }
 
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidateOrderExistsAttribute))]
         public async Task <IActionResult> UpdateOrderForBuyer(Guid BuyerId, Guid id, [FromBody] OrderForUpdateDto order)
@@ -109,7 +110,7 @@ namespace ShopSmarfone.Controllers
             return NoContent();
         }
 
-        [HttpPatch("{id}")]
+        [HttpPatch("{id}"), Authorize]
         [ServiceFilter(typeof(ValidateOrderExistsAttribute))]
         public async Task <IActionResult> PatchUpdateOrder(Guid BuyerId, Guid id, [FromBody] JsonPatchDocument<OrderForUpdateDto> order)
         {
@@ -131,7 +132,7 @@ namespace ShopSmarfone.Controllers
             await _repository.SaveAsync();
             return NoContent();
         }
-        [HttpOptions]
+        [HttpOptions, Authorize]
         public IActionResult GetOptions()
         {
             Response.Headers.Add("Allow", "GET, OPTIONS, POST, DELETE, PUT, PATCH");

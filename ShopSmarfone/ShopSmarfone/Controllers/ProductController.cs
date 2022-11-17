@@ -3,6 +3,7 @@ using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
 using Entities.RequestFeatures;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -25,7 +26,7 @@ namespace ShopSmarfone.Controllers
             _mapper = mapper;
             _dataShaper = dataShaper;
         }
-        [HttpGet]
+        [HttpGet, Authorize]
         [HttpHead]
         public async Task <IActionResult> GetProduct([FromQuery] ProductParameters productParameters)
         {
@@ -36,7 +37,7 @@ namespace ShopSmarfone.Controllers
                 return Ok(_dataShaper.ShapeData(productDto, productParameters.Fields));
 
         }
-        [HttpGet("{id}", Name = "ProductById")]
+        [HttpGet("{id}", Name = "ProductById"), Authorize]
         [HttpHead("{id}")]
         public async Task <IActionResult> GetProducts(Guid id)
         {
@@ -52,7 +53,7 @@ namespace ShopSmarfone.Controllers
                 return Ok(productDto);
             }
         }
-        [HttpPost]
+        [HttpPost, Authorize]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task <IActionResult> CreateBuyer([FromBody] ProductForCreationDto product)
         {
@@ -62,7 +63,7 @@ namespace ShopSmarfone.Controllers
             var productToReturn = _mapper.Map<ProductDto>(productEntity);
             return CreatedAtRoute("ProductById", new { id = productToReturn.Id }, productToReturn);
         }
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize]
         [ServiceFilter(typeof(ValidateProductExistsAttribute))]
         public async Task <IActionResult> DeleteProduct(Guid id)
         {
@@ -71,7 +72,7 @@ namespace ShopSmarfone.Controllers
             await _repository.SaveAsync();
             return NoContent();
         }
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidateProductExistsAttribute))]
         public async Task <IActionResult> UpdateProduct(Guid id, [FromBody] ProdutctForUpdateDto product)
@@ -81,7 +82,7 @@ namespace ShopSmarfone.Controllers
             await _repository.SaveAsync();
             return NoContent();
         }
-        [HttpOptions]
+        [HttpOptions, Authorize]
         public IActionResult GetOptions()
         {
             Response.Headers.Add("Allow", "GET, OPTIONS, POST, DELETE, PUT, PATCH");

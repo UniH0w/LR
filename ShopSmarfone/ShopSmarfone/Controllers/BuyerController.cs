@@ -3,6 +3,7 @@ using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
 using Entities.RequestFeatures;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -29,7 +30,7 @@ namespace ShopSmarfone.Controllers
 
 
         }
-        [HttpGet]
+        [HttpGet, Authorize]
         [HttpHead]
         public async Task <IActionResult> GetBuyer([FromQuery] BuyerParameters buyerParameters)
         {
@@ -40,7 +41,7 @@ namespace ShopSmarfone.Controllers
 
 
         }
-        [HttpGet("{id}", Name = "BuyerById")]
+        [HttpGet("{id}", Name = "BuyerById"), Authorize]
         [HttpHead("{id}")]
         public async Task <IActionResult> GetBuyers(Guid id)
         {
@@ -56,7 +57,7 @@ namespace ShopSmarfone.Controllers
                 return Ok(buyerDto);
             }
         }
-        [HttpPost]
+        [HttpPost, Authorize]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task <IActionResult> CreateBuyer([FromBody] BuyerForCreationDto buyer)
         {
@@ -66,7 +67,7 @@ namespace ShopSmarfone.Controllers
             var buyerToReturn = _mapper.Map<BuyerDto>(buyerEntity);
             return CreatedAtRoute("BuyerById", new { id = buyerToReturn.Id }, buyerToReturn);
         }
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize]
         [ServiceFilter(typeof(ValidateBuyerExistsAttribute))]
         public async Task <IActionResult> DeleteBuyer(Guid id)
         {
@@ -75,7 +76,7 @@ namespace ShopSmarfone.Controllers
             await _repository.SaveAsync();
             return NoContent();
         }
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidateBuyerExistsAttribute))]
         public async Task <IActionResult> UpdateBuyer(Guid id, [FromBody] BuyerForUpdateDto buyer)
@@ -85,7 +86,7 @@ namespace ShopSmarfone.Controllers
             await _repository.SaveAsync();
             return NoContent();
         }
-        [HttpOptions]
+        [HttpOptions, Authorize]
         public IActionResult GetOptions()
         {
             Response.Headers.Add("Allow", "GET, OPTIONS, POST, DELETE, PUT, PATCH");
