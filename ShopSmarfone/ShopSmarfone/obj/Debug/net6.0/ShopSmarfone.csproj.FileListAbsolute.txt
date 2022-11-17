@@ -197,3 +197,4 @@ C:\Users\Uniho\Desktop\LR\ShopSmarfone\ShopSmarfone\obj\Debug\net6.0\ShopSmarfon
 C:\Users\Uniho\Desktop\LR\ShopSmarfone\ShopSmarfone\obj\Debug\net6.0\ShopSmarfone.genruntimeconfig.cache
 C:\Users\Uniho\Desktop\LR\ShopSmarfone\ShopSmarfone\obj\Debug\net6.0\ref\ShopSmarfone.dll
 C:\Users\Uniho\Desktop\LR\ShopSmarfone\ShopSmarfone\bin\Debug\net6.0\System.Linq.Dynamic.Core.dll
+C:\Users\Uniho\Desktop\LR\ShopSmarfone\ShopSmarfone\bin\Debug\net6.0\Microsoft.AspNetCore.Mvc.Versioning.dll

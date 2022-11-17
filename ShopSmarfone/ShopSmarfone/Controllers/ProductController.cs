@@ -26,6 +26,7 @@ namespace ShopSmarfone.Controllers
             _dataShaper = dataShaper;
         }
         [HttpGet]
+        [HttpHead]
         public async Task <IActionResult> GetProduct([FromQuery] ProductParameters productParameters)
         {
     
@@ -36,6 +37,7 @@ namespace ShopSmarfone.Controllers
 
         }
         [HttpGet("{id}", Name = "ProductById")]
+        [HttpHead("{id}")]
         public async Task <IActionResult> GetProducts(Guid id)
         {
             var product = await _repository.Product.GetProductsAsync(id, trackChanges: false);
@@ -78,6 +80,12 @@ namespace ShopSmarfone.Controllers
             _mapper.Map(product, productEntity);
             await _repository.SaveAsync();
             return NoContent();
+        }
+        [HttpOptions]
+        public IActionResult GetOptions()
+        {
+            Response.Headers.Add("Allow", "GET, OPTIONS, POST, DELETE, PUT, PATCH");
+            return Ok();
         }
     }
 

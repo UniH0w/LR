@@ -30,6 +30,7 @@ namespace ShopSmarfone.Controllers
 
         }
         [HttpGet]
+        [HttpHead]
         public async Task <IActionResult> GetEmployeesForCompany(Guid companyId, [FromQuery] EmployeeParameters employeeParameters)
         {
             if (!employeeParameters.ValidAgeRange)
@@ -47,6 +48,7 @@ namespace ShopSmarfone.Controllers
 
         }
         [HttpGet("{id}", Name = "GetEmployeeForCompany")]
+        [HttpHead("{id}")]
         public async Task <IActionResult> GetEmployeeForCompany(Guid companyId, Guid id)
         {
             var company = await _repository.Company.GetCompanyAsync(companyId, trackChanges: false);
@@ -124,6 +126,12 @@ namespace ShopSmarfone.Controllers
             _mapper.Map(employeeToPatch, employeeEntity);
             await _repository.SaveAsync();
             return NoContent();
+        }
+        [HttpOptions]
+        public IActionResult GetOptions()
+        {
+            Response.Headers.Add("Allow", "GET, OPTIONS, POST, DELETE, PUT, PATCH");
+            return Ok();
         }
     }
 }

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "6beOk1TlOT6QKa5Q4Mkjn/Q72wNxhywG6EK+qS00GfZ4BaCxBBgkrxk+ntf58IQXbBTX5/uyyAGZ3gFsvwFHQQ==",
+  "dgSpecHash": "wLUua1F3eaLPkHHelGLn7Cs0f4qBooHZE5mMZvi9nuCAmdglNMuaBPsctuhsDiBBDkuZuDoPqA98HkyUnpaHhQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\Uniho\\Desktop\\LR\\ShopSmarfone\\ShopSmarfone\\ShopSmarfone.csproj",
   "expectedPackageFiles": [
@@ -11,6 +11,7 @@
     "C:\\Users\\Uniho\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\Uniho\\.nuget\\packages\\microsoft.aspnetcore.jsonpatch\\7.0.0\\microsoft.aspnetcore.jsonpatch.7.0.0.nupkg.sha512",
     "C:\\Users\\Uniho\\.nuget\\packages\\microsoft.aspnetcore.mvc.newtonsoftjson\\6.0.10\\microsoft.aspnetcore.mvc.newtonsoftjson.6.0.10.nupkg.sha512",
+    "C:\\Users\\Uniho\\.nuget\\packages\\microsoft.aspnetcore.mvc.versioning\\5.0.0\\microsoft.aspnetcore.mvc.versioning.5.0.0.nupkg.sha512",
     "C:\\Users\\Uniho\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "C:\\Users\\Uniho\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\Uniho\\.nuget\\packages\\microsoft.data.sqlclient\\5.0.1\\microsoft.data.sqlclient.5.0.1.nupkg.sha512",

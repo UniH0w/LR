@@ -27,6 +27,7 @@ namespace ShopSmarfone.Controllers
             _dataShaper = dataShaper;
         }
         [HttpGet]
+        [HttpHead]
         public async Task <IActionResult> GetStorageForProduct(Guid ProductId, [FromQuery] StorageParameters storageParameters)
         {
             var product = await _repository.Product.GetProductsAsync(ProductId, trackChanges: false);
@@ -41,6 +42,7 @@ namespace ShopSmarfone.Controllers
             return Ok(_dataShaper.ShapeData(productDto, storageParameters.Fields));
         }
         [HttpGet("{id}", Name = "GetStorageForProduct")]
+        [HttpHead("{id}")]
         public async Task <IActionResult> GetStorageForCProduct(Guid ProductId, Guid id)
         {
             var product = await _repository.Product.GetProductsAsync(ProductId, trackChanges: false);
@@ -98,6 +100,12 @@ namespace ShopSmarfone.Controllers
             _mapper.Map(storage, storageEntity);
             await _repository.SaveAsync();
             return NoContent();
+        }
+        [HttpOptions]
+        public IActionResult GetOptions()
+        {
+            Response.Headers.Add("Allow", "GET, OPTIONS, POST, DELETE, PUT, PATCH");
+            return Ok();
         }
     }
 }

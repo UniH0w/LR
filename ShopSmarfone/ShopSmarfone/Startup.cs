@@ -44,6 +44,7 @@ namespace ShopSmarfone
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
+            services.ConfigureVersioning();
             services.AddScoped<IDataShaper<EmployeeDto>, DataShaper<EmployeeDto>>();
             services.AddScoped<IDataShaper<BuyerDto>, DataShaper<BuyerDto>>();
             services.AddScoped<IDataShaper<StorageDto>, DataShaper<StorageDto>>();

@@ -30,6 +30,7 @@ namespace ShopSmarfone.Controllers
 
         }
         [HttpGet]
+        [HttpHead]
         public async Task <IActionResult> GetBuyer([FromQuery] BuyerParameters buyerParameters)
         {
              var buyers = await _repository.Buyer.GetAllBuyerAsync(false, buyerParameters);
@@ -40,6 +41,7 @@ namespace ShopSmarfone.Controllers
 
         }
         [HttpGet("{id}", Name = "BuyerById")]
+        [HttpHead("{id}")]
         public async Task <IActionResult> GetBuyers(Guid id)
         {
             var buyer = await _repository.Buyer.GetBuyerAsync(id, trackChanges: false);
@@ -82,6 +84,12 @@ namespace ShopSmarfone.Controllers
             _mapper.Map(buyer, buyerEntity);
             await _repository.SaveAsync();
             return NoContent();
+        }
+        [HttpOptions]
+        public IActionResult GetOptions()
+        {
+            Response.Headers.Add("Allow", "GET, OPTIONS, POST, DELETE, PUT, PATCH");
+            return Ok();
         }
 
     }

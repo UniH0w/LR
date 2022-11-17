@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 
 namespace ShopSmarfone.Controllers
 {
+    [ApiVersion("1.0")]
     [Route("api/companies")]
     [ApiController]
     public class CompaniesController : ControllerBase
@@ -24,10 +25,10 @@ namespace ShopSmarfone.Controllers
             _repository = repository;
             _logger = logger;
             _mapper = mapper;
-
-
         }
+
         [HttpGet("{id}", Name = "CompanyById")]
+        [HttpHead("{id}")]
         public async Task<IActionResult> GetCompanies(Guid id)
         {
             var company = await _repository.Company.GetCompanyAsync(id, trackChanges: false);
@@ -42,7 +43,14 @@ namespace ShopSmarfone.Controllers
                 return Ok(companyDto);
             }
         }
+        [HttpOptions]
+        public IActionResult GetCompaniesOptions()
+        {
+            Response.Headers.Add("Allow", "GET, OPTIONS, POST");
+            return Ok();
+        }
         [HttpGet]
+        [HttpHead]
         public async Task<IActionResult> GetCompanies([FromQuery] CompanyParameters parameters)
         {
 

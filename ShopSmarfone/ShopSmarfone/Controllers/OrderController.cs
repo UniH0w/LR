@@ -29,6 +29,7 @@ namespace ShopSmarfone.Controllers
             _dataShaper = dataShaper;
         }
         [HttpGet]
+        [HttpHead]
         public async Task <IActionResult> OrderForProduct(Guid BuyerId, [FromQuery] OrderParameters orderParameters)
         {
             var buyer = await _repository.Buyer.GetBuyerAsync(BuyerId, trackChanges: false);
@@ -44,6 +45,7 @@ namespace ShopSmarfone.Controllers
         }
 
         [HttpGet("{id}", Name = "GetOderForBuyer")]
+        [HttpHead("{id}")]
         public async Task <IActionResult> GetOrderForBuyer(Guid BuyerId, Guid id)
         {
             var buyer = await _repository.Buyer.GetBuyerAsync(BuyerId, trackChanges: false);
@@ -128,6 +130,12 @@ namespace ShopSmarfone.Controllers
             _mapper.Map(orderToPatch, orderEntity);
             await _repository.SaveAsync();
             return NoContent();
+        }
+        [HttpOptions]
+        public IActionResult GetOptions()
+        {
+            Response.Headers.Add("Allow", "GET, OPTIONS, POST, DELETE, PUT, PATCH");
+            return Ok();
         }
 
 
