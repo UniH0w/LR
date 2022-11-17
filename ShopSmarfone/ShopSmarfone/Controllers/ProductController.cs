@@ -17,11 +17,13 @@ namespace ShopSmarfone.Controllers
         private readonly IRepositoryManager _repository;
         private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
-        public ProductController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper)
+        private readonly IDataShaper<ProductDto> _dataShaper;
+        public ProductController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper, IDataShaper<ProductDto> dataShaper)
         {
             _repository = repository;
             _logger = logger;
             _mapper = mapper;
+            _dataShaper = dataShaper;
         }
         [HttpGet]
         public async Task <IActionResult> GetProduct([FromQuery] ProductParameters productParameters)
@@ -30,8 +32,8 @@ namespace ShopSmarfone.Controllers
             var products = await _repository.Product.GetAllProductAsync(false, productParameters);
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(products.MetaData));
             var productDto = _mapper.Map<IEnumerable<ProductDto>>(products);
-                return Ok(productDto);
-     
+                return Ok(_dataShaper.ShapeData(productDto, productParameters.Fields));
+
         }
         [HttpGet("{id}", Name = "ProductById")]
         public async Task <IActionResult> GetProducts(Guid id)

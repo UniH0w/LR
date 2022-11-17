@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Entities.RequestFeatures;
+using Repository.Extensions;
 
 namespace Repository
 {
@@ -32,7 +33,10 @@ namespace Repository
         }
         public async Task<PagedList<Storage>> GetAllStorageAsync(Guid ProductId, StorageParameters storageParameters, bool trackChanges)
         {
-            var storage = await FindByCondition(e => e.ProductId.Equals(ProductId), trackChanges).OrderBy(e => e.FullNameProduct).ToListAsync();
+            var storage = await FindByCondition(e => e.ProductId.Equals(ProductId), trackChanges)
+                .Search(storageParameters.Search)
+                .Sort(storageParameters.OrderBy)
+                .ToListAsync();
             return PagedList<Storage>.ToPagedList(storage, storageParameters.PageNumber, storageParameters.PageSize);
         }
     }

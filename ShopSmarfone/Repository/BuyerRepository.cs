@@ -2,6 +2,7 @@
 using Entities;
 using Entities.Models;
 using Entities.RequestFeatures;
+using Repository.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -33,7 +34,10 @@ namespace Repository
         }
         public async Task<PagedList<Buyer>> GetAllBuyerAsync(bool trackChanges,BuyerParameters buyerParameters)
         {
-            var buyer = await FindAll(trackChanges).OrderBy(e => e.Name).ToListAsync();
+            var buyer = await FindAll(trackChanges)
+                .Search(buyerParameters.Search)
+                .Sort(buyerParameters.OrderBy)
+                .ToListAsync();
             return PagedList<Buyer>.ToPagedList(buyer , buyerParameters.PageNumber, buyerParameters.PageSize);
         }
     }

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Entities.RequestFeatures;
+using Repository.Extensions;
 
 namespace Repository
 {
@@ -32,7 +33,11 @@ namespace Repository
         }
         public async Task<PagedList<Product>> GetAllProductAsync(bool trackChanges, ProductParameters productParameters)
         {
-            var product = await FindAll(trackChanges).OrderBy(e => e.NameModels).ToListAsync();
+            var product = await FindAll(trackChanges)
+                .FilterProduct(productParameters.MinPrice, productParameters.MaxPrice)
+                .Search(productParameters.Search)
+                .Sort(productParameters.OrderBy)
+                .ToListAsync();
             return PagedList<Product>.ToPagedList(product, productParameters.PageNumber, productParameters.PageSize);
         }
 

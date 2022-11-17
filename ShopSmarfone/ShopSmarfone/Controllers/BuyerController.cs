@@ -6,6 +6,7 @@ using Entities.RequestFeatures;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Repository.DataShaping;
 using ShopSmarfone.ActionFilters;
 
 namespace ShopSmarfone.Controllers
@@ -17,12 +18,14 @@ namespace ShopSmarfone.Controllers
         private readonly IRepositoryManager _repository;
         private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
+        private readonly IDataShaper<BuyerDto> _dataShaper;
 
-        public BuyerController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper)
+        public BuyerController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper, IDataShaper<BuyerDto> dataShaper)
         {
             _repository = repository;
             _logger = logger;
             _mapper = mapper;
+            _dataShaper = dataShaper;
 
 
         }
@@ -32,9 +35,9 @@ namespace ShopSmarfone.Controllers
              var buyers = await _repository.Buyer.GetAllBuyerAsync(false, buyerParameters);
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(buyers.MetaData));
             var buyersDto = _mapper.Map<IEnumerable<BuyerDto>>(buyers);
-             return Ok(buyersDto);
-            
-            
+            return Ok(_dataShaper.ShapeData(buyersDto, buyerParameters.Fields));
+
+
         }
         [HttpGet("{id}", Name = "BuyerById")]
         public async Task <IActionResult> GetBuyers(Guid id)

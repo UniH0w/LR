@@ -19,12 +19,14 @@ namespace ShopSmarfone.Controllers
         private readonly IRepositoryManager _repository;
         private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
+        private readonly IDataShaper<OrderDto> _dataShaper;
 
-        public OrderController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper)
+        public OrderController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper, IDataShaper<OrderDto> dataShaper)
         {
             _repository = repository;
             _logger = logger;
             _mapper = mapper;
+            _dataShaper = dataShaper;
         }
         [HttpGet]
         public async Task <IActionResult> OrderForProduct(Guid BuyerId, [FromQuery] OrderParameters orderParameters)
@@ -38,7 +40,7 @@ namespace ShopSmarfone.Controllers
             var OrderFromDb = await _repository.Order.GetAllOrderAsync(BuyerId,orderParameters, false);
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(OrderFromDb.MetaData));
             var OrderDto = _mapper.Map<IEnumerable<OrderDto>>(OrderFromDb);
-            return Ok(OrderDto);
+            return Ok(_dataShaper.ShapeData(OrderDto, orderParameters.Fields));
         }
 
         [HttpGet("{id}", Name = "GetOderForBuyer")]

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Entities.RequestFeatures;
+using Repository.Extensions;
 
 namespace Repository
 {
@@ -33,11 +34,12 @@ namespace Repository
         }
         public async Task<PagedList<Employee>> GetEmployeeAsync(Guid companyId, EmployeeParameters employeeParameters, bool trackChanges)
         {
-            var employees = await FindByCondition(
-                e => e.CompanyId.Equals(companyId) && (e.Age >= employeeParameters.MinAge && e.Age <= employeeParameters.MaxAge),
-                trackChanges
-            ).OrderBy(e => e.Name).ToListAsync();
-            return PagedList<Employee>.ToPagedList(employees, employeeParameters.PageNumber, employeeParameters.PageSize);
+            var employee = await FindByCondition(e => e.CompanyId.Equals(companyId), trackChanges)
+                .FilterEmployees(employeeParameters.MinAge, employeeParameters.MaxAge)
+                .Search(employeeParameters.Search)
+                .Sort(employeeParameters.OrderBy)
+                .ToListAsync();
+            return PagedList<Employee>.ToPagedList(employee, employeeParameters.PageNumber, employeeParameters.PageSize);
         }
     }
 }

@@ -8,5 +8,9 @@ namespace Entities.RequestFeatures
 {
     public class BuyerParameters : RequestParameters
     {
+        public BuyerParameters()
+        {
+            OrderBy = "name";
+        }
     }
 }

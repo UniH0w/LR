@@ -18,13 +18,15 @@ namespace ShopSmarfone.Controllers
         private readonly IRepositoryManager _repository;
         private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
+        private readonly IDataShaper<EmployeeDto> _dataShaper;
 
-        public EmployeeController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper)
+
+        public EmployeeController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper, IDataShaper<EmployeeDto> dataShaper)
         {
             _repository = repository;
             _logger = logger;
             _mapper = mapper;
-
+            _dataShaper = dataShaper;
 
         }
         [HttpGet]
@@ -41,7 +43,8 @@ namespace ShopSmarfone.Controllers
             var employeesFromDb = await _repository.Employee.GetEmployeeAsync(companyId, employeeParameters, trackChanges: false);
             Response.Headers.Add("X-Pagination",JsonConvert.SerializeObject(employeesFromDb.MetaData));
             var employeeDto = _mapper.Map<IEnumerable<EmployeeDto>>(employeesFromDb);
-            return Ok(employeesFromDb);
+            return Ok(_dataShaper.ShapeData(employeeDto, employeeParameters.Fields));
+
         }
         [HttpGet("{id}", Name = "GetEmployeeForCompany")]
         public async Task <IActionResult> GetEmployeeForCompany(Guid companyId, Guid id)

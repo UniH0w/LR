@@ -60,8 +60,6 @@ namespace Repository
                 return _employeeRepository;
             }
         }
-
-
         public IStorageRepository Storage
         {
             get

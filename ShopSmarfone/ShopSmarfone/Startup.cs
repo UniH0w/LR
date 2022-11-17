@@ -7,6 +7,8 @@ using ShopSmarfone.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using ShopSmarfone.ActionFilters;
 using ShopSmarfone.ActionFilters;
+using Entities.DataTransferObjects;
+using Repository.DataShaping;
 
 namespace ShopSmarfone
 {
@@ -42,6 +44,11 @@ namespace ShopSmarfone
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
+            services.AddScoped<IDataShaper<EmployeeDto>, DataShaper<EmployeeDto>>();
+            services.AddScoped<IDataShaper<BuyerDto>, DataShaper<BuyerDto>>();
+            services.AddScoped<IDataShaper<StorageDto>, DataShaper<StorageDto>>();
+            services.AddScoped<IDataShaper<OrderDto>, DataShaper<OrderDto>>();
+            services.AddScoped<IDataShaper<ProductDto>, DataShaper<ProductDto>>();
             services.AddScoped<ValidationFilterAttribute>();
             services.AddScoped<ValidateCompanyExistsAttribute>();
             services.AddScoped<ValidateEmployeeForCompanyExistsAttribute>();
