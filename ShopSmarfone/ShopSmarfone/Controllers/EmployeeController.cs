@@ -30,6 +30,12 @@ namespace ShopSmarfone.Controllers
             _dataShaper = dataShaper;
 
         }
+        /// <summary>
+        /// Возвращает работников определенной компании
+        /// </summary>
+        /// <param name="companyId">Id компании</param>
+        /// <param name="employeeParameters">Параметра возвращения массива данных</param>
+        /// <returns></returns>
         [HttpGet, Authorize]
         [HttpHead]
         public async Task <IActionResult> GetEmployeesForCompany(Guid companyId, [FromQuery] EmployeeParameters employeeParameters)
@@ -48,6 +54,13 @@ namespace ShopSmarfone.Controllers
             return Ok(_dataShaper.ShapeData(employeeDto, employeeParameters.Fields));
 
         }
+        /// <summary>
+        /// Возвращает работника определенной компании
+        /// </summary>
+        /// <param name="companyId">Id компании</param>
+        /// <param name="id">Id работника</param>
+        /// <param name="employeeParameters">Параметра возвращения массива данных</param>
+        /// <returns></returns>
         [HttpGet("{id}", Name = "GetEmployeeForCompany"), Authorize]
         [HttpHead("{id}")]
         public async Task <IActionResult> GetEmployeeForCompany(Guid companyId, Guid id)
@@ -69,6 +82,12 @@ namespace ShopSmarfone.Controllers
             var employee = _mapper.Map<EmployeeDto>(employeeDb);
             return Ok(employee);
         }
+        /// <summary>
+        /// Создает нового сотрудника компании
+        /// </summary>
+        /// <param name="companyId">Id компании</param>
+        /// <param name="employee">Данные работника</param>
+        /// <returns></returns>
         [HttpPost, Authorize]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task <IActionResult> CreateEmployeeForCompany(Guid companyId, [FromBody] EmployeeForCreationDto employee)
@@ -84,8 +103,13 @@ namespace ShopSmarfone.Controllers
                 id = employeeToReturn.Id
             }, employeeToReturn);
         }
-        [HttpDelete("{id}"), Authorize]
-      
+        /// <summary>
+        /// Удаляет сотрудника компании
+        /// </summary>
+        /// <param name="companyId">Id компании</param>
+        /// <param name="id">Id работника</param>
+        /// <returns></returns>
+        [HttpDelete("{id}"), Authorize] 
         [ServiceFilter(typeof(ValidateEmployeeForCompanyExistsAttribute))]
         public async Task <IActionResult> DeleteEmployeeForCompany(Guid companyId, Guid id)
         {
@@ -94,10 +118,15 @@ namespace ShopSmarfone.Controllers
             await _repository.SaveAsync();
             return NoContent();
         }
+        /// <summary>
+        /// Обновляет сотрудника компании
+        /// </summary>
+        /// <param name="companyId">Id компании</param>
+        /// <param name="id">Id работника</param>
+        /// <param name="employee">Новые данные работника</param>
+        /// <returns></returns>
         [HttpPut("{id}"), Authorize]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
-        [ServiceFilter(typeof(ValidateEmployeeForCompanyExistsAttribute))]
-
         public async Task <IActionResult> UpdateEmployeeForCompany(Guid companyId, Guid id, [FromBody] EmployeeForUpdateDto employee)
         {
             
@@ -106,6 +135,13 @@ namespace ShopSmarfone.Controllers
             await _repository.SaveAsync();
             return NoContent();
         }
+        /// <summary>
+        /// Обновляет сотрудника компании
+        /// </summary>
+        /// <param name="companyId">Id компании</param>
+        /// <param name="id">Id работника</param>
+        /// <param name="patchDoc">Новые данные работника</param>
+        /// <returns></returns>
         [HttpPatch("{id}"), Authorize]
         [ServiceFilter(typeof(ValidateEmployeeForCompanyExistsAttribute))]
         public async Task <IActionResult> PartiallyUpdateEmployeeForCompany(Guid companyId, Guid id, [FromBody] JsonPatchDocument<EmployeeForUpdateDto> patchDoc)
@@ -128,6 +164,10 @@ namespace ShopSmarfone.Controllers
             await _repository.SaveAsync();
             return NoContent();
         }
+        /// <summary>
+        /// Возвращает заголовки запросов
+        /// </summary>
+        /// <returns></returns>
         [HttpOptions]
         public IActionResult GetOptions()
         {

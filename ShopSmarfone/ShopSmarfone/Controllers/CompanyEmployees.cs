@@ -15,6 +15,7 @@ namespace ShopSmarfone.Controllers
     [ApiVersion("1.0")]
     [Route("api/companies")]
     [ApiController]
+    [ApiExplorerSettings(GroupName = "v1")]
     public class CompaniesController : ControllerBase
     {
         private readonly IRepositoryManager _repository;
@@ -27,7 +28,11 @@ namespace ShopSmarfone.Controllers
             _logger = logger;
             _mapper = mapper;
         }
-
+        /// <summary>
+        /// Возвращает компанию по id
+        /// </summary>
+        /// <param name="id">Id сомпании</param>
+        /// <returns></returns>
         [HttpGet("{id}", Name = "CompanyById")]
         [HttpHead("{id}")]
         public async Task<IActionResult> GetCompanies(Guid id)
@@ -44,12 +49,21 @@ namespace ShopSmarfone.Controllers
                 return Ok(companyDto);
             }
         }
+        /// <summary>
+        /// Возвращает заголовки запросов
+        /// </summary>
+        /// <returns></returns>
         [HttpOptions]
         public IActionResult GetCompaniesOptions()
         {
             Response.Headers.Add("Allow", "GET, OPTIONS, POST");
             return Ok();
         }
+        /// <summary>
+        /// Возвращает все компании
+        /// </summary>
+        /// <returns>Компании</returns>
+        /// <response code="401">Требуется авторизация пользователя</response>
         [HttpGet(Name = "GetCompanies"), Authorize(Roles = "User")]
         [HttpHead]
         public async Task<IActionResult> GetCompanies([FromQuery] CompanyParameters parameters)
@@ -61,6 +75,11 @@ namespace ShopSmarfone.Controllers
                return Ok(companiesDto);
             
         }
+        /// <summary>
+        /// Создает новую компанию в базе данных
+        /// </summary>
+        /// <param name="company">Данные компании</param>
+        /// <returns></returns>
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public  async Task<IActionResult> CreateCompany([FromBody] CompanyForCreationDto company)
@@ -71,6 +90,11 @@ namespace ShopSmarfone.Controllers
             var companyToReturn = _mapper.Map<CompanyDto>(companyEntity);
             return CreatedAtRoute("CompanyById", new { id = companyToReturn.Id }, companyToReturn);
         }
+        /// <summary>
+        /// Удаляет компанию по id
+        /// </summary>
+        /// <param name="id">Id компании</param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         [ServiceFilter(typeof(ValidateCompanyExistsAttribute))]
         public async Task <IActionResult> DeleteCompany(Guid id)
@@ -81,6 +105,12 @@ namespace ShopSmarfone.Controllers
            await _repository.SaveAsync();
             return NoContent();
         }
+        /// <summary>
+        /// Изменяет компанию
+        /// </summary>
+        /// <param name="id">Id компании</param>
+        /// <param name="company">Новые данные компании</param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidateCompanyExistsAttribute))]

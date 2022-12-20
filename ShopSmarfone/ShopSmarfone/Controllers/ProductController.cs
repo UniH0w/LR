@@ -26,6 +26,11 @@ namespace ShopSmarfone.Controllers
             _mapper = mapper;
             _dataShaper = dataShaper;
         }
+        /// <summary>
+        /// Выводит список продуктов
+        /// </summary>
+        /// <param name="productParameters">Параметр возвращения массива данных</param>
+        /// <returns></returns>
         [HttpGet, Authorize]
         [HttpHead]
         public async Task <IActionResult> GetProduct([FromQuery] ProductParameters productParameters)
@@ -37,6 +42,11 @@ namespace ShopSmarfone.Controllers
                 return Ok(_dataShaper.ShapeData(productDto, productParameters.Fields));
 
         }
+        /// <summary>
+        /// Выводит список продуктов по id
+        /// </summary>
+        /// <param name="id">Id продукта</param>
+        /// <returns></returns>
         [HttpGet("{id}", Name = "ProductById"), Authorize]
         [HttpHead("{id}")]
         public async Task <IActionResult> GetProducts(Guid id)
@@ -53,6 +63,11 @@ namespace ShopSmarfone.Controllers
                 return Ok(productDto);
             }
         }
+        /// <summary>
+        /// Создает продукт
+        /// </summary>
+        /// <param name="product">Название продукта</param>
+        /// <returns></returns>
         [HttpPost, Authorize]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task <IActionResult> CreateBuyer([FromBody] ProductForCreationDto product)
@@ -63,6 +78,11 @@ namespace ShopSmarfone.Controllers
             var productToReturn = _mapper.Map<ProductDto>(productEntity);
             return CreatedAtRoute("ProductById", new { id = productToReturn.Id }, productToReturn);
         }
+        /// <summary>
+        /// Удалает продукт
+        /// </summary>
+        /// <param name="id">Id продукта</param>
+        /// <returns></returns>
         [HttpDelete("{id}"), Authorize]
         [ServiceFilter(typeof(ValidateProductExistsAttribute))]
         public async Task <IActionResult> DeleteProduct(Guid id)
@@ -72,6 +92,12 @@ namespace ShopSmarfone.Controllers
             await _repository.SaveAsync();
             return NoContent();
         }
+        /// <summary>
+        /// Обновляет данные продукта
+        /// </summary>
+        /// <param name="id">Id продукта</param>
+        /// <param name="product">Параметра возвращения массива данных</param>
+        /// <returns></returns>
         [HttpPut("{id}"), Authorize]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidateProductExistsAttribute))]
@@ -82,6 +108,10 @@ namespace ShopSmarfone.Controllers
             await _repository.SaveAsync();
             return NoContent();
         }
+        /// <summary>
+        /// Возвращает заголовки запросов
+        /// </summary>
+        /// <returns></returns>
         [HttpOptions, Authorize]
         public IActionResult GetOptions()
         {

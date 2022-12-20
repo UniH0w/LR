@@ -50,7 +50,7 @@ namespace ShopSmarfone
             services.ConfigureIdentity();
             services.ConfigureJWT(Configuration);
             services.AddScoped<IAuthenticationManager, AuthenticationManager>();
-
+            services.ConfigureSwagger();
             services.AddScoped<IDataShaper<EmployeeDto>, DataShaper<EmployeeDto>>();
             services.AddScoped<IDataShaper<BuyerDto>, DataShaper<BuyerDto>>();
             services.AddScoped<IDataShaper<StorageDto>, DataShaper<StorageDto>>();
@@ -72,7 +72,11 @@ namespace ShopSmarfone
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(s =>
+                {
+                    s.SwaggerEndpoint("/swagger/v1/swagger.json", "Code Maze API v1");
+                    s.SwaggerEndpoint("/swagger/v2/swagger.json", "Code Maze API v2");
+                });
             }
             app.ConfigureExceptionHandler(logger);
             app.UseHttpsRedirection();

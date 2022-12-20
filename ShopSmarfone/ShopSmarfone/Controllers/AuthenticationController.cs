@@ -26,6 +26,11 @@ namespace ShopSmarfone.Controllers
             _authManager = authManager;
             
         }
+        /// <summary>
+        /// Создание аккаунта пользователя
+        /// </summary>
+        /// <param name="userForRegistration">Регистрационные данные пользователя</param>
+        /// <returns></returns>
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistration)
@@ -44,7 +49,11 @@ namespace ShopSmarfone.Controllers
             await _userManager.AddToRolesAsync(user, userForRegistration.Roles);
             return StatusCode(201);
         }
-        //Previous action
+        /// <summary>
+        /// Авторизация пользователя
+        /// </summary>
+        /// <param name="user">Логин и пароль пользователя</param>
+        /// <returns></returns>
         [HttpPost("login")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> Authenticate([FromBody] UserForAuthenticationDto user)

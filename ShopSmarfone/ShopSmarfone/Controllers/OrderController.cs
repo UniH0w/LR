@@ -29,6 +29,12 @@ namespace ShopSmarfone.Controllers
             _mapper = mapper;
             _dataShaper = dataShaper;
         }
+        /// <summary>
+        /// Возвращает список заказа
+        /// </summary>
+        /// <param name="orderParameters">Параметра возвращения массива данных</param>
+        /// <param name="BuyerId">Id покупателя</param>
+        /// <returns></returns>
         [HttpGet, Authorize]
         [HttpHead]
         public async Task <IActionResult> OrderForProduct(Guid BuyerId, [FromQuery] OrderParameters orderParameters)
@@ -44,7 +50,12 @@ namespace ShopSmarfone.Controllers
             var OrderDto = _mapper.Map<IEnumerable<OrderDto>>(OrderFromDb);
             return Ok(_dataShaper.ShapeData(OrderDto, orderParameters.Fields));
         }
-
+        /// <summary>
+        /// Возвращает заказ по id
+        /// </summary>
+        /// <param name="id">Id заказа</param>
+        /// <param name="BuyerId">Id покупателя</param>
+        /// <returns></returns>
         [HttpGet("{id}", Name = "GetOderForBuyer"), Authorize]
         [HttpHead("{id}")]
         public async Task <IActionResult> GetOrderForBuyer(Guid BuyerId, Guid id)
@@ -64,7 +75,12 @@ namespace ShopSmarfone.Controllers
             var order = _mapper.Map<OrderDto>(orderDb);
             return Ok(order);
         }
-
+        /// <summary>
+        /// Создает заказ
+        /// </summary>
+        /// <param name="BuyerId">Id покупателя</param>
+        /// <param name="order">Название покупки</param>
+        /// <returns></returns>
         [HttpPost, Authorize]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task <IActionResult> CreateOrder(Guid BuyerId, [FromBody] OrderForCreationDto order)
@@ -86,6 +102,12 @@ namespace ShopSmarfone.Controllers
                 orderReturn.Id
             }, orderReturn);
         }
+        /// <summary>
+        /// Удаляет заказ
+        /// </summary>
+        /// <param name="BuyerId">Id покупателя</param>
+        /// <param name="id">Id заказа</param>
+        /// <returns></returns>
         [HttpDelete("{id}"), Authorize]
         [ServiceFilter(typeof(ValidateOrderExistsAttribute))]
         public async Task <IActionResult> DeleteOrderForBuyer(Guid BuyerId, Guid id)
@@ -98,7 +120,13 @@ namespace ShopSmarfone.Controllers
             return NoContent();
         }
 
-
+        /// <summary>
+        /// Обновляет заказ
+        /// </summary>
+        /// <param name="order">Параметра возвращения массива данных</param>
+        /// <param name="id">Id заказа</param>
+        /// <param name="BuyerId">Id покупателя</param>
+        /// <returns></returns>
         [HttpPut("{id}"), Authorize]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidateOrderExistsAttribute))]
@@ -109,7 +137,13 @@ namespace ShopSmarfone.Controllers
             await _repository.SaveAsync();
             return NoContent();
         }
-
+        /// <summary>
+        /// Обновляет сотрудника компании
+        /// </summary>
+        /// <param name="BuyerId">Id покупателя</param>
+        /// <param name="id">Id заказа</param>
+        /// <param name="order">Параметра возвращения массива данных</param>
+        /// <returns></returns>
         [HttpPatch("{id}"), Authorize]
         [ServiceFilter(typeof(ValidateOrderExistsAttribute))]
         public async Task <IActionResult> PatchUpdateOrder(Guid BuyerId, Guid id, [FromBody] JsonPatchDocument<OrderForUpdateDto> order)
@@ -132,6 +166,10 @@ namespace ShopSmarfone.Controllers
             await _repository.SaveAsync();
             return NoContent();
         }
+        /// <summary>
+        /// Возвращает заголовки запросов
+        /// </summary>
+        /// <returns></returns>
         [HttpOptions, Authorize]
         public IActionResult GetOptions()
         {

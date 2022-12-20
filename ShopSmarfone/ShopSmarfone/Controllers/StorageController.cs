@@ -27,6 +27,12 @@ namespace ShopSmarfone.Controllers
             _mapper = mapper;
             _dataShaper = dataShaper;
         }
+        /// <summary>
+        /// Показывает список склада
+        /// </summary>
+        /// <param name="ProductId">Id продукта</param>
+        /// <param name="storageParameters">Параметра возвращения массива данных</param>
+        /// <returns></returns>
         [HttpGet, Authorize]
         [HttpHead]
         public async Task <IActionResult> GetStorageForProduct(Guid ProductId, [FromQuery] StorageParameters storageParameters)
@@ -42,6 +48,12 @@ namespace ShopSmarfone.Controllers
             var productDto = _mapper.Map<IEnumerable<StorageDto>>(productFromDb);
             return Ok(_dataShaper.ShapeData(productDto, storageParameters.Fields));
         }
+        /// <summary>
+        /// Показывает список склада по id
+        /// </summary>
+        /// <param name="ProductId">Id продукта</param>
+        /// <param name="id">Id склада</param>
+        /// <returns></returns>
         [HttpGet("{id}", Name = "GetStorageForProduct"), Authorize]
         [HttpHead("{id}")]
         public async Task <IActionResult> GetStorageForCProduct(Guid ProductId, Guid id)
@@ -63,6 +75,12 @@ namespace ShopSmarfone.Controllers
             var storage = _mapper.Map<StorageDto>(storageDb);
             return Ok(storage);
         }
+        /// <summary>
+        /// Создаёт новые данные для склада
+        /// </summary>
+        /// <param name="ProductId">Id продукта</param>
+        /// <param name="storage"> Параметра возвращения массива данных</param>
+        /// <returns></returns>
         [HttpPost, Authorize]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task <IActionResult> CreateStorageForProduct(Guid ProductId, [FromBody] StorageForCreationDto storage)
@@ -83,6 +101,12 @@ namespace ShopSmarfone.Controllers
                 id = storageToReturn.Id
             }, storageToReturn);
         }
+        /// <summary>
+        /// Удаляет  данные склада
+        /// </summary>
+        /// <param name="ProductId">Id продукта</param>
+        /// <param name="id"> id склада</param>
+        /// <returns></returns>
         [HttpDelete("{id}"), Authorize]
         [ServiceFilter(typeof(ValidateStorageExistsAttribute))]
         public async Task <IActionResult> DeleteEmployeeForCompany(Guid ProductId, Guid id)
@@ -92,6 +116,13 @@ namespace ShopSmarfone.Controllers
             await _repository.SaveAsync();
             return NoContent();
         }
+        /// <summary>
+        /// Обновляет  данные склада
+        /// </summary>
+        /// <param name="ProductId">Id продукта</param>
+        /// <param name="id"> id склада</param>
+        /// <param name="storage">Параметра возвращения массива данных</param>
+        /// <returns></returns>
         [HttpPut("{id}"), Authorize]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidateStorageExistsAttribute))]
@@ -102,6 +133,10 @@ namespace ShopSmarfone.Controllers
             await _repository.SaveAsync();
             return NoContent();
         }
+        /// <summary>
+        /// Возвращает заголовки запросов
+        /// </summary>
+        /// <returns></returns>
         [HttpOptions, Authorize]
         public IActionResult GetOptions()
         {

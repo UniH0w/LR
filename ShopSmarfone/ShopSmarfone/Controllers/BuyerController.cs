@@ -30,6 +30,11 @@ namespace ShopSmarfone.Controllers
 
 
         }
+        /// <summary>
+        /// Возвращает cписок покупателей 
+        /// </summary>
+        /// <param name="buyerParameters">Параметра возвращения массива данных</param>
+        /// <returns></returns>
         [HttpGet, Authorize]
         [HttpHead]
         public async Task <IActionResult> GetBuyer([FromQuery] BuyerParameters buyerParameters)
@@ -41,6 +46,11 @@ namespace ShopSmarfone.Controllers
 
 
         }
+        /// <summary>
+        /// Возвращает покупателя по id
+        /// </summary>
+        /// <param name="id">Id покупателя</param>
+        /// <returns></returns>
         [HttpGet("{id}", Name = "BuyerById"), Authorize]
         [HttpHead("{id}")]
         public async Task <IActionResult> GetBuyers(Guid id)
@@ -57,6 +67,11 @@ namespace ShopSmarfone.Controllers
                 return Ok(buyerDto);
             }
         }
+        /// <summary>
+        /// Создает нового покупателя в базе данных
+        /// </summary>
+        /// <param name="buyer">Параметра возвращения массива данных</param>
+        /// <returns></returns>
         [HttpPost, Authorize]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task <IActionResult> CreateBuyer([FromBody] BuyerForCreationDto buyer)
@@ -67,6 +82,11 @@ namespace ShopSmarfone.Controllers
             var buyerToReturn = _mapper.Map<BuyerDto>(buyerEntity);
             return CreatedAtRoute("BuyerById", new { id = buyerToReturn.Id }, buyerToReturn);
         }
+        /// <summary>
+        /// Удаляет покупателя по id
+        /// </summary>
+        /// <param name="id">Id покупателя</param>
+        /// <returns></returns>
         [HttpDelete("{id}"), Authorize]
         [ServiceFilter(typeof(ValidateBuyerExistsAttribute))]
         public async Task <IActionResult> DeleteBuyer(Guid id)
@@ -76,6 +96,12 @@ namespace ShopSmarfone.Controllers
             await _repository.SaveAsync();
             return NoContent();
         }
+        /// <summary>
+        /// Изменяет данные покупателя
+        /// </summary>
+        /// <param name="id">Id компании</param>
+        /// <param name="buyer">Параметра возвращения массива данных</param>
+        /// <returns></returns>
         [HttpPut("{id}"), Authorize]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidateBuyerExistsAttribute))]
@@ -86,6 +112,10 @@ namespace ShopSmarfone.Controllers
             await _repository.SaveAsync();
             return NoContent();
         }
+        /// <summary>
+        /// Возвращает заголовки запросов
+        /// </summary>
+        /// <returns></returns>
         [HttpOptions, Authorize]
         public IActionResult GetOptions()
         {

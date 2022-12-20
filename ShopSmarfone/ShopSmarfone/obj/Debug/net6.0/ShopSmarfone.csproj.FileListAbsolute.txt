@@ -204,3 +204,5 @@ C:\Users\Uniho\Desktop\LR\ShopSmarfone\ShopSmarfone\bin\Debug\net6.0\Microsoft.A
 C:\Users\Uniho\Desktop\LR\ShopSmarfone\ShopSmarfone\bin\Debug\net6.0\Microsoft.Extensions.Identity.Core.dll
 C:\Users\Uniho\Desktop\LR\ShopSmarfone\ShopSmarfone\bin\Debug\net6.0\Microsoft.Extensions.Identity.Stores.dll
 C:\Users\Uniho\Desktop\LR\ShopSmarfone\ShopSmarfone\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Uniho\Desktop\LR\ShopSmarfone\ShopSmarfone\bin\Debug\net6.0\ShopSmarfone.xml
+C:\Users\Uniho\Desktop\LR\ShopSmarfone\ShopSmarfone\obj\Debug\net6.0\ShopSmarfone.xml

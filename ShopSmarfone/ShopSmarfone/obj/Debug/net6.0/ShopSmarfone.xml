@@ -1,0 +1,416 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ShopSmarfone</name>
+    </assembly>
+    <members>
+        <member name="M:ShopSmarfone.Controllers.AuthenticationController.RegisterUser(Entities.DataTransferObjects.UserForRegistrationDto)">
+            <summary>
+            Создание аккаунта пользователя
+            </summary>
+            <param name="userForRegistration">Регистрационные данные пользователя</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.AuthenticationController.Authenticate(Entities.DataTransferObjects.UserForAuthenticationDto)">
+            <summary>
+            Авторизация пользователя
+            </summary>
+            <param name="user">Логин и пароль пользователя</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.BuyerController.GetBuyer(Entities.RequestFeatures.BuyerParameters)">
+            <summary>
+            Возвращает cписок покупателей 
+            </summary>
+            <param name="buyerParameters">Параметра возвращения массива данных</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.BuyerController.GetBuyers(System.Guid)">
+            <summary>
+            Возвращает покупателя по id
+            </summary>
+            <param name="id">Id покупателя</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.BuyerController.CreateBuyer(Entities.DataTransferObjects.BuyerForCreationDto)">
+            <summary>
+            Создает нового покупателя в базе данных
+            </summary>
+            <param name="buyer">Параметра возвращения массива данных</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.BuyerController.DeleteBuyer(System.Guid)">
+            <summary>
+            Удаляет покупателя по id
+            </summary>
+            <param name="id">Id покупателя</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.BuyerController.UpdateBuyer(System.Guid,Entities.DataTransferObjects.BuyerForUpdateDto)">
+            <summary>
+            Изменяет данные покупателя
+            </summary>
+            <param name="id">Id компании</param>
+            <param name="buyer">Параметра возвращения массива данных</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.BuyerController.GetOptions">
+            <summary>
+            Возвращает заголовки запросов
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.CompaniesController.GetCompanies(System.Guid)">
+            <summary>
+            Возвращает компанию по id
+            </summary>
+            <param name="id">Id сомпании</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.CompaniesController.GetCompaniesOptions">
+            <summary>
+            Возвращает заголовки запросов
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.CompaniesController.GetCompanies(Entities.RequestFeatures.CompanyParameters)">
+            <summary>
+            Возвращает все компании
+            </summary>
+            <returns>Компании</returns>
+            <response code="401">Требуется авторизация пользователя</response>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.CompaniesController.CreateCompany(Entities.DataTransferObjects.CompanyForCreationDto)">
+            <summary>
+            Создает новую компанию в базе данных
+            </summary>
+            <param name="company">Данные компании</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.CompaniesController.DeleteCompany(System.Guid)">
+            <summary>
+            Удаляет компанию по id
+            </summary>
+            <param name="id">Id компании</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.CompaniesController.UpdateCompany(System.Guid,Entities.DataTransferObjects.CompanyForUpdateDto)">
+            <summary>
+            Изменяет компанию
+            </summary>
+            <param name="id">Id компании</param>
+            <param name="company">Новые данные компании</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.EmployeeController.GetEmployeesForCompany(System.Guid,Entities.RequestFeatures.EmployeeParameters)">
+            <summary>
+            Возвращает работников определенной компании
+            </summary>
+            <param name="companyId">Id компании</param>
+            <param name="employeeParameters">Параметра возвращения массива данных</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.EmployeeController.GetEmployeeForCompany(System.Guid,System.Guid)">
+            <summary>
+            Возвращает работника определенной компании
+            </summary>
+            <param name="companyId">Id компании</param>
+            <param name="id">Id работника</param>
+            <param name="employeeParameters">Параметра возвращения массива данных</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.EmployeeController.CreateEmployeeForCompany(System.Guid,Entities.DataTransferObjects.EmployeeForCreationDto)">
+            <summary>
+            Создает нового сотрудника компании
+            </summary>
+            <param name="companyId">Id компании</param>
+            <param name="employee">Данные работника</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.EmployeeController.DeleteEmployeeForCompany(System.Guid,System.Guid)">
+            <summary>
+            Удаляет сотрудника компании
+            </summary>
+            <param name="companyId">Id компании</param>
+            <param name="id">Id работника</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.EmployeeController.UpdateEmployeeForCompany(System.Guid,System.Guid,Entities.DataTransferObjects.EmployeeForUpdateDto)">
+            <summary>
+            Обновляет сотрудника компании
+            </summary>
+            <param name="companyId">Id компании</param>
+            <param name="id">Id работника</param>
+            <param name="employee">Новые данные работника</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.EmployeeController.PartiallyUpdateEmployeeForCompany(System.Guid,System.Guid,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{Entities.DataTransferObjects.EmployeeForUpdateDto})">
+            <summary>
+            Обновляет сотрудника компании
+            </summary>
+            <param name="companyId">Id компании</param>
+            <param name="id">Id работника</param>
+            <param name="patchDoc">Новые данные работника</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.EmployeeController.GetOptions">
+            <summary>
+            Возвращает заголовки запросов
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.OrderController.OrderForProduct(System.Guid,Entities.RequestFeatures.OrderParameters)">
+            <summary>
+            Возвращает список заказа
+            </summary>
+            <param name="orderParameters">Параметра возвращения массива данных</param>
+            <param name="BuyerId">Id покупателя</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.OrderController.GetOrderForBuyer(System.Guid,System.Guid)">
+            <summary>
+            Возвращает заказ по id
+            </summary>
+            <param name="id">Id заказа</param>
+            <param name="BuyerId">Id покупателя</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.OrderController.CreateOrder(System.Guid,Entities.DataTransferObjects.OrderForCreationDto)">
+            <summary>
+            Создает заказ
+            </summary>
+            <param name="BuyerId">Id покупателя</param>
+            <param name="order">Название покупки</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.OrderController.DeleteOrderForBuyer(System.Guid,System.Guid)">
+            <summary>
+            Удалает заказ
+            </summary>
+            <param name="BuyerId">Id покупателя</param>
+            <param name="id">Id заказа</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.OrderController.UpdateOrderForBuyer(System.Guid,System.Guid,Entities.DataTransferObjects.OrderForUpdateDto)">
+            <summary>
+            Обновляет заказ
+            </summary>
+            <param name="order">Параметра возвращения массива данных</param>
+            <param name="id">Id заказа</param>
+            <param name="BuyerId">Id покупателя</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.OrderController.PatchUpdateOrder(System.Guid,System.Guid,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{Entities.DataTransferObjects.OrderForUpdateDto})">
+            <summary>
+            Обновляет сотрудника компании
+            </summary>
+            <param name="BuyerId">Id покупателя</param>
+            <param name="id">Id заказа</param>
+            <param name="order">Параметра возвращения массива данных</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.OrderController.GetOptions">
+            <summary>
+            Возвращает заголовки запросов
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.ProductController.GetProduct(Entities.RequestFeatures.ProductParameters)">
+            <summary>
+            Выводит список продуктов
+            </summary>
+            <param name="productParameters">Параметр возвращения массива данных</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.ProductController.GetProducts(System.Guid)">
+            <summary>
+            Выводит список продуктов по id
+            </summary>
+            <param name="id">Id продукта</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.ProductController.CreateBuyer(Entities.DataTransferObjects.ProductForCreationDto)">
+            <summary>
+            Создает продукт
+            </summary>
+            <param name="product">Название продукта</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.ProductController.DeleteProduct(System.Guid)">
+            <summary>
+            Удалает продукт
+            </summary>
+            <param name="id">Id продукта</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.ProductController.UpdateProduct(System.Guid,Entities.DataTransferObjects.ProdutctForUpdateDto)">
+            <summary>
+            Обновляет данные продукта
+            </summary>
+            <param name="id">Id продукта</param>
+            <param name="product">Параметра возвращения массива данных</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.ProductController.GetOptions">
+            <summary>
+            Возвращает заголовки запросов
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.StorageController.GetStorageForProduct(System.Guid,Entities.RequestFeatures.StorageParameters)">
+            <summary>
+            Показывает список склада
+            </summary>
+            <param name="ProductId">Id продукта</param>
+            <param name="storageParameters">Параметра возвращения массива данных</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.StorageController.GetStorageForCProduct(System.Guid,System.Guid)">
+            <summary>
+            Показывает список склада по id
+            </summary>
+            <param name="ProductId">Id продукта</param>
+            <param name="id">Id склада</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.StorageController.CreateStorageForProduct(System.Guid,Entities.DataTransferObjects.StorageForCreationDto)">
+            <summary>
+            Создаёт новые данные для склада
+            </summary>
+            <param name="ProductId">Id продукта</param>
+            <param name="storage"> Параметра возвращения массива данных</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.StorageController.DeleteEmployeeForCompany(System.Guid,System.Guid)">
+            <summary>
+            Удаляет  данные склада
+            </summary>
+            <param name="ProductId">Id продукта</param>
+            <param name="id"> id склада</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.StorageController.UpdateStorageForProduct(System.Guid,System.Guid,Entities.DataTransferObjects.StorageForUpdateDto)">
+            <summary>
+            Обновляет  данные склада
+            </summary>
+            <param name="ProductId">Id продукта</param>
+            <param name="id"> id склада</param>
+            <param name="storage">Параметра возвращения массива данных</param>
+            <returns></returns>
+        </member>
+        <member name="M:ShopSmarfone.Controllers.StorageController.GetOptions">
+            <summary>
+            Возвращает заголовки запросов
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:ShopSmarfone.Migrations.DatabaseCreation">
+            <inheritdoc />
+        </member>
+        <member name="M:ShopSmarfone.Migrations.DatabaseCreation.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ShopSmarfone.Migrations.DatabaseCreation.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ShopSmarfone.Migrations.DatabaseCreation.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:ShopSmarfone.Migrations.InitialData">
+            <inheritdoc />
+        </member>
+        <member name="M:ShopSmarfone.Migrations.InitialData.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ShopSmarfone.Migrations.InitialData.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ShopSmarfone.Migrations.InitialData.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:ShopSmarfone.Migrations.DatabaseCreation15">
+            <inheritdoc />
+        </member>
+        <member name="M:ShopSmarfone.Migrations.DatabaseCreation15.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ShopSmarfone.Migrations.DatabaseCreation15.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ShopSmarfone.Migrations.DatabaseCreation15.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:ShopSmarfone.Migrations.InitialData12">
+            <inheritdoc />
+        </member>
+        <member name="M:ShopSmarfone.Migrations.InitialData12.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ShopSmarfone.Migrations.InitialData12.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ShopSmarfone.Migrations.InitialData12.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:ShopSmarfone.Migrations.InitialData14">
+            <inheritdoc />
+        </member>
+        <member name="M:ShopSmarfone.Migrations.InitialData14.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ShopSmarfone.Migrations.InitialData14.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ShopSmarfone.Migrations.InitialData14.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:ShopSmarfone.Migrations.InitialData10">
+            <inheritdoc />
+        </member>
+        <member name="M:ShopSmarfone.Migrations.InitialData10.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ShopSmarfone.Migrations.InitialData10.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ShopSmarfone.Migrations.InitialData10.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:ShopSmarfone.Migrations.InitialData55">
+            <inheritdoc />
+        </member>
+        <member name="M:ShopSmarfone.Migrations.InitialData55.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ShopSmarfone.Migrations.InitialData55.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ShopSmarfone.Migrations.InitialData55.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:ShopSmarfone.Migrations.CreatingIdentityTables">
+            <inheritdoc />
+        </member>
+        <member name="M:ShopSmarfone.Migrations.CreatingIdentityTables.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ShopSmarfone.Migrations.CreatingIdentityTables.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ShopSmarfone.Migrations.CreatingIdentityTables.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:ShopSmarfone.Migrations.AddedRolesToDb">
+            <inheritdoc />
+        </member>
+        <member name="M:ShopSmarfone.Migrations.AddedRolesToDb.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ShopSmarfone.Migrations.AddedRolesToDb.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ShopSmarfone.Migrations.AddedRolesToDb.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>
